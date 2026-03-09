@@ -138,12 +138,16 @@ header h1 {
 .panel::-webkit-scrollbar-thumb { background: var(--a1); border-radius: 2px; }
 
 /* ── SIM PANEL ── */
-#sim { overflow: hidden; }
-
-.field {
-  flex: 1;
+#sim {
+  overflow: hidden;
   position: relative;
-  min-height: 0;
+}
+
+/* field fills everything above the 52px controls bar */
+.field {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  bottom: 52px; /* controls bar height */
   overflow: hidden;
   background-color: var(--bg);
   background-image:
@@ -220,16 +224,19 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 }
 .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-/* sim controls */
+/* sim controls — pinned to bottom of #sim */
 .controls {
-  flex-shrink: 0;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 52px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 0 12px;
   background: rgba(7, 7, 15, 0.97);
   border-top: 1px solid var(--bdr);
+  z-index: 10;
 }
 
 .btn {
@@ -600,12 +607,11 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
       </div>
       <div class="toast" id="toast"></div>
     </div>
-    <div class="legend" id="legend"></div>
     <div class="controls">
       <button class="btn btn-run" id="btnRun" onclick="toggleSim()">▶ RUN</button>
       <button class="btn btn-reset" onclick="resetSim()">↺ RESET</button>
-      <div class="spd">SPEED<input type="range" id="spd" min="1" max="8" value="4"></div>
-      <div class="meme-count" id="memeCount">0 MEMES SELECTED</div>
+      <div class="spd">SPD<input type="range" id="spd" min="1" max="8" value="4"></div>
+      <div class="meme-count" id="memeCount">0 MEMES</div>
     </div>
   </div>
 
