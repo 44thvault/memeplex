@@ -198,16 +198,17 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 }
 .toast.show { opacity: 1; }
 
-/* legend strip */
+/* legend strip — desktop only */
 .legend {
   flex-shrink: 0;
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 8px 14px;
   padding: 5px 14px;
   border-top: 1px solid var(--bdr);
   background: rgba(7, 7, 15, 0.85);
 }
+@media (min-width: 900px) { .legend { display: flex; } }
 .leg-item {
   display: flex;
   align-items: center;
@@ -224,9 +225,9 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
-  padding: 9px 14px;
+  padding: 8px 12px;
   background: rgba(7, 7, 15, 0.97);
   border-top: 1px solid var(--bdr);
 }
@@ -252,19 +253,22 @@ canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .spd {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: 0.62rem;
+  gap: 6px;
+  font-size: 0.58rem;
   color: var(--dim);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
-.spd input { width: 64px; accent-color: var(--a2); cursor: pointer; }
+.spd input { width: 55px; accent-color: var(--a2); cursor: pointer; }
 
 .meme-count {
   margin-left: auto;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: var(--a4);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
+@media (max-width: 380px) { .meme-count { display: none; } }
 
 /* ── MEMES PANEL ── */
 #memes { padding: 12px; gap: 5px; overflow-y: auto; }
