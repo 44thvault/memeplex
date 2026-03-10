@@ -7,30 +7,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;font-family:'JetBrains Mono','Courier New',monospace}
+html,body{width:100%;height:100%;overflow:hidden;background:#050508;color:#e8e8e8;font-family:'JetBrains Mono','Courier New',monospace}
 
 #app{display:flex;flex-direction:column;height:100vh;height:100dvh;width:100%;overflow:hidden}
 
 /* HEADER */
 #hdr{
-  flex:0 0 52px;height:52px;
+  flex:0 0 50px;height:50px;
   display:flex;align-items:center;padding:0 16px;gap:12px;
-  background:#000;
-  border-bottom:2px solid #fff;
+  background:linear-gradient(180deg,#0a0a0f 0%,#050508 100%);
+  border-bottom:1px solid #1a1a2a;
   z-index:10;
 }
 #hdr h1{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.3rem,5vw,1.9rem);
-  letter-spacing:.12em;color:#fff;text-shadow:0 0 24px rgba(255,60,0,.4);line-height:1
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,4.5vw,1.7rem);
+  letter-spacing:.14em;color:#fff;line-height:1;
+  text-shadow:0 0 30px rgba(255,80,20,.25),0 0 60px rgba(255,40,0,.1);
 }
-#hdr .sub{font-size:.52rem;color:#666;letter-spacing:.2em;display:none}
+#hdr .sub{font-size:.48rem;color:#555;letter-spacing:.22em;display:none;text-transform:uppercase}
 @media(min-width:520px){#hdr .sub{display:block}}
-#genBadge{margin-left:auto;font-size:.62rem;color:#fff;letter-spacing:.12em;white-space:nowrap;font-family:'Bebas Neue',sans-serif}
+#genBadge{
+  margin-left:auto;font-size:.6rem;color:#888;letter-spacing:.14em;white-space:nowrap;
+  font-family:'Bebas Neue',sans-serif;
+  background:rgba(255,255,255,.04);padding:4px 10px;border-radius:2px;
+  border:1px solid rgba(255,255,255,.06);
+}
 
 /* TAB BAR */
 #tabs{
-  flex:0 0 46px;height:46px;
-  display:flex;background:#0a0a0a;border-bottom:1px solid #222;
+  flex:0 0 42px;height:42px;
+  display:flex;background:#08080d;border-bottom:1px solid #1a1a22;
   overflow-x:auto;overflow-y:hidden;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
@@ -39,15 +45,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 .tab{
   flex:1 0 auto;min-width:0;
   border:none;background:transparent;
-  color:#555;font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.1em;
+  color:#444;font-family:'Bebas Neue',sans-serif;font-size:.66rem;letter-spacing:.1em;
   cursor:pointer;border-bottom:2px solid transparent;
   display:flex;align-items:center;justify-content:center;gap:4px;
   padding:0 10px;white-space:nowrap;
-  transition:color .15s,border-color .15s,background .15s;
+  transition:color .2s,border-color .2s,background .2s;
 }
-.tab:hover{color:#999}
-.tab.on{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.03)}
-.tab-ico{font-size:.85rem}
+.tab:hover{color:#888;background:rgba(255,255,255,.015)}
+.tab.on{color:#e8e8e8;border-bottom-color:rgba(255,255,255,.7);background:rgba(255,255,255,.025)}
+.tab-ico{font-size:.8rem}
 
 /* MAIN */
 #main{flex:1 1 0;min-height:0;position:relative;display:flex;flex-direction:column;overflow:hidden}
@@ -56,7 +62,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 .pnl{
   display:none;flex-direction:column;
   flex:1 1 0;min-height:0;
-  background:#000;
+  background:#050508;
   overflow:hidden;
 }
 .pnl.on{display:flex}
@@ -68,235 +74,257 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 #canvas-wrap{
   flex:1 1 0;min-height:0;
   position:relative;overflow:hidden;
-  background:#000
+  background:#050508;
 }
 #canvas-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* Live HUD overlay on canvas */
+#simHud{
+  position:absolute;top:10px;left:12px;
+  pointer-events:none;z-index:5;
+  display:none;
+}
+#simHud.on{display:flex;flex-direction:column;gap:3px}
+.hud-row{
+  font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.1em;
+  color:rgba(255,255,255,.4);
+  text-shadow:0 0 8px rgba(0,0,0,.8);
+}
+.hud-row span{color:rgba(255,255,255,.75)}
 
 .hint{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:10px;pointer-events:none
+  gap:12px;pointer-events:none;
 }
-.hint-ico{font-size:2.5rem;opacity:.25}
-.hint-txt{font-size:.58rem;color:#555;letter-spacing:.18em;text-align:center;line-height:2.2}
+.hint-ico{font-size:2.2rem;opacity:.2}
+.hint-txt{font-size:.56rem;color:#444;letter-spacing:.2em;text-align:center;line-height:2.4}
 
 .toast-el{
-  position:absolute;top:12px;left:50%;transform:translateX(-50%);
-  background:rgba(7,7,15,.96);border:1px solid #fff;
-  padding:8px 20px;font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.15em;
-  color:#fff;text-shadow:0 0 10px rgba(200,0,255,.4);
-  opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;z-index:50;
-  max-width:90vw;overflow:hidden;text-overflow:ellipsis;
+  position:absolute;top:10px;right:12px;
+  background:rgba(8,8,15,.94);border:1px solid rgba(255,255,255,.25);
+  padding:7px 16px;font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.14em;
+  color:#fff;
+  opacity:0;transform:translateY(-6px);
+  transition:opacity .3s ease,transform .3s ease;
+  pointer-events:none;white-space:nowrap;z-index:50;
+  max-width:80vw;overflow:hidden;text-overflow:ellipsis;
+  border-radius:2px;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);
 }
-.toast-el.show{opacity:1}
+.toast-el.show{opacity:1;transform:translateY(0)}
 
 /* CONTROLS BAR */
 #ctrlBar{
-  flex:0 0 50px;min-height:50px;max-height:50px;
+  flex:0 0 48px;min-height:48px;max-height:48px;
   display:flex;align-items:center;gap:8px;padding:0 12px;
-  background:#080808;border-top:1px solid #222;
-  overflow:hidden
+  background:linear-gradient(0deg,#06060a 0%,#0a0a10 100%);
+  border-top:1px solid #1a1a22;
+  overflow:hidden;
 }
 .btn{
-  font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.14em;
-  padding:8px 16px;border:1px solid;background:transparent;
-  cursor:pointer;border-radius:1px;white-space:nowrap;flex-shrink:0;
-  transition:background .12s,color .12s;
+  font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.14em;
+  padding:7px 15px;border:1px solid;background:transparent;
+  cursor:pointer;border-radius:2px;white-space:nowrap;flex-shrink:0;
+  transition:all .15s ease;
 }
-.btn-run{border-color:#fff;color:#fff}
-.btn-run:hover{background:rgba(255,255,255,.08)}
-.btn-run.on{background:#fff;color:#000}
-.btn-rst{border-color:#444;color:#444}
-.btn-rst:hover{border-color:#777;color:#777}
-.spd-wrap{display:flex;align-items:center;gap:5px;font-size:.54rem;color:#555;white-space:nowrap;flex-shrink:0}
-.spd-wrap input[type=range]{width:52px;accent-color:#fff;cursor:pointer}
-#mCnt{margin-left:auto;font-size:.56rem;color:#999;letter-spacing:.08em;white-space:nowrap}
+.btn-run{border-color:rgba(255,255,255,.5);color:#ccc}
+.btn-run:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.05)}
+.btn-run.on{background:rgba(255,255,255,.9);color:#000;border-color:transparent}
+.btn-rst{border-color:#333;color:#555}
+.btn-rst:hover{border-color:#666;color:#999}
+.spd-wrap{display:flex;align-items:center;gap:5px;font-size:.5rem;color:#555;white-space:nowrap;flex-shrink:0;letter-spacing:.1em}
+.spd-wrap input[type=range]{width:50px;accent-color:#666;cursor:pointer}
+#mCnt{margin-left:auto;font-size:.52rem;color:#666;letter-spacing:.1em;white-space:nowrap}
 
 /* ── MEMES PANEL ── */
 #pMemes{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;padding:12px;gap:4px}
 
-.preset-row{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:10px}
+.preset-row{display:flex;flex-wrap:wrap;gap:5px;padding-bottom:10px}
 .pbtn{
-  font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.1em;
-  padding:7px 13px;border:1px solid #222;background:transparent;
-  color:#777;cursor:pointer;border-radius:2px;
-  transition:color .12s,border-color .12s;
+  font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.1em;
+  padding:6px 12px;border:1px solid #1a1a22;background:rgba(255,255,255,.02);
+  color:#666;cursor:pointer;border-radius:2px;
+  transition:all .15s ease;
 }
-.pbtn:hover{color:#bbb;border-color:#555}
-.pbtn:active{color:#fff;border-color:#fff}
+.pbtn:hover{color:#bbb;border-color:#444;background:rgba(255,255,255,.04)}
+.pbtn:active{color:#fff;border-color:#666}
 
 .cat-lbl{
-  font-size:.54rem;letter-spacing:.3em;color:#555;
-  padding:10px 2px 5px;border-bottom:1px solid #111;margin-bottom:3px
+  font-size:.5rem;letter-spacing:.35em;color:#444;
+  padding:12px 2px 5px;border-bottom:1px solid #111118;margin-bottom:3px
 }
 .chip{
   display:flex;align-items:center;gap:10px;
-  padding:10px;border:1px solid transparent;border-radius:3px;
-  cursor:pointer;min-height:48px;background:rgba(255,255,255,.015);
+  padding:9px 10px;border:1px solid transparent;border-radius:3px;
+  cursor:pointer;min-height:44px;background:rgba(255,255,255,.012);
   margin-bottom:2px;
-  transition:border-color .12s,background .12s;
+  transition:all .15s ease;
 }
-.chip:hover{background:rgba(255,255,255,.04)}
-.chip.on{border-color:#fff;background:rgba(255,255,255,.06)}
-.chip-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:box-shadow .15s}
+.chip:hover{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.06)}
+.chip.on{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
+.chip-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .2s ease}
+.chip.on .chip-dot{box-shadow:0 0 8px currentColor}
 .chip-body{flex:1;min-width:0}
-.chip-name{font-size:.72rem;color:#e8e8e8;line-height:1.3}
+.chip-name{font-size:.68rem;color:#ccc;line-height:1.3}
 .chip.on .chip-name{color:#fff;font-weight:700}
-.chip-desc{display:block;font-size:.58rem;color:#666;margin-top:2px;line-height:1.4}
-.chip-vs{flex-shrink:0;font-size:.56rem;color:#666;text-align:right;line-height:1.8}
+.chip-desc{display:block;font-size:.55rem;color:#555;margin-top:2px;line-height:1.4}
+.chip-vs{flex-shrink:0;font-size:.52rem;color:#555;text-align:right;line-height:1.9;letter-spacing:.05em}
 
 /* ── STATS PANEL ── */
-#pStats{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;padding:12px;gap:12px}
+#pStats{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;padding:12px;gap:10px}
 
-.card{background:#0a0a0a;border:1px solid #222;border-radius:3px;padding:13px}
-.card-ttl{font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.2em;color:#fff;margin-bottom:11px}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.mlbl{display:block;font-size:.56rem;color:#555;letter-spacing:.12em;margin-bottom:2px}
-.mval{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.1em;color:#fff}
-.dom-lbl{display:block;font-size:.56rem;color:#555;letter-spacing:.12em;margin-top:10px;margin-bottom:2px}
-.dom-val{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;color:#fff}
+.card{
+  background:rgba(255,255,255,.02);border:1px solid #1a1a22;border-radius:3px;padding:12px;
+}
+.card-ttl{
+  font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.22em;color:#666;margin-bottom:10px;
+  text-transform:uppercase;
+}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mlbl{display:block;font-size:.5rem;color:#444;letter-spacing:.14em;margin-bottom:2px}
+.mval{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.08em;color:#e8e8e8}
+.dom-lbl{display:block;font-size:.5rem;color:#444;letter-spacing:.14em;margin-top:10px;margin-bottom:2px}
+.dom-val{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.1em;color:#e8e8e8}
 
-.mx-item{border:1px solid #222;border-radius:3px;padding:11px;margin-bottom:7px;background:rgba(255,255,255,.01)}
-.mx-item.dom{border-color:#fff;background:rgba(255,255,255,.03)}
+/* Mini sparkline area */
+#sparkWrap{margin-top:10px;height:48px;border-top:1px solid #111118;padding-top:8px}
+#sparkCanvas{width:100%;height:38px;display:block;border-radius:2px}
+
+.mx-item{
+  border:1px solid #1a1a22;border-radius:3px;padding:10px;margin-bottom:6px;
+  background:rgba(255,255,255,.01);
+  transition:border-color .2s,background .2s;
+}
+.mx-item.dom{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.03)}
 .mx-item:last-child{margin-bottom:0}
-.mx-name{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.12em;margin-bottom:5px}
-.mx-track{background:rgba(255,255,255,.05);height:5px;border-radius:3px;overflow:hidden;margin:4px 0}
-.mx-bar{height:100%;border-radius:3px;transition:width .35s}
-.mx-row{display:flex;justify-content:space-between;font-size:.58rem;color:#666;margin-top:3px}
-.mx-desc{font-size:.6rem;color:#666;margin-top:5px;line-height:1.5}
+.mx-name{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.12em;margin-bottom:4px}
+.mx-track{background:rgba(255,255,255,.04);height:4px;border-radius:2px;overflow:hidden;margin:4px 0}
+.mx-bar{height:100%;border-radius:2px;transition:width .4s ease}
+.mx-row{display:flex;justify-content:space-between;font-size:.54rem;color:#555;margin-top:3px}
+.mx-desc{font-size:.56rem;color:#555;margin-top:5px;line-height:1.5}
 .mx-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
-.mx-tag{font-size:.52rem;padding:2px 7px;border-radius:2px}
+.mx-tag{font-size:.48rem;padding:2px 6px;border-radius:2px}
 
-.logbox{background:rgba(0,0,0,.5);border:1px solid #222;padding:8px;
-  max-height:150px;overflow-y:auto;display:flex;flex-direction:column-reverse;gap:2px}
-.ll{font-size:.58rem;color:#666;line-height:1.5}
-.ll span{color:#fff}
+/* EVENT LOG */
+.logbox{
+  background:rgba(0,0,0,.3);border:1px solid #111118;padding:8px;border-radius:2px;
+  max-height:120px;overflow-y:auto;display:flex;flex-direction:column-reverse;gap:1px;
+  scrollbar-width:thin;scrollbar-color:#222 transparent;
+}
+.ll{
+  font-size:.54rem;color:#444;line-height:1.6;
+  padding:2px 0;
+  opacity:0;animation:logIn .3s ease forwards;
+}
+@keyframes logIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.ll span{color:#aaa}
+.ll.c span{color:#e8e8e8}
+.ll.milestone{color:#666;border-left:2px solid rgba(255,255,255,.15);padding-left:8px}
+.ll.milestone span{color:#fff}
 
 /* ── GUIDE PANEL ── */
 #pGuide{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column}
 
 .g-hero{
-  flex-shrink:0;padding:22px 16px;text-align:center;
-  background:#050505;border-bottom:1px solid #333
+  flex-shrink:0;padding:24px 16px;text-align:center;
+  background:linear-gradient(180deg,#08080d 0%,#050508 100%);
+  border-bottom:1px solid #1a1a22;
 }
 .g-hero h2{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,5.5vw,2rem);
-  letter-spacing:.14em;color:#fff;text-shadow:0 0 16px rgba(255,60,0,.35);margin-bottom:7px
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.3rem,5vw,1.8rem);
+  letter-spacing:.16em;color:#e8e8e8;margin-bottom:8px;
+  text-shadow:0 0 20px rgba(255,60,0,.2);
 }
-.g-hero p{font-size:clamp(.64rem,2.4vw,.7rem);color:#888;line-height:1.85;max-width:500px;margin:0 auto}
+.g-hero p{font-size:clamp(.62rem,2.3vw,.68rem);color:#666;line-height:1.9;max-width:480px;margin:0 auto}
 
 .g-body{padding:14px;display:flex;flex-direction:column;gap:12px}
 
-.gsec{border:1px solid #222;border-radius:3px;overflow:hidden;background:#0a0a0a}
+.gsec{border:1px solid #1a1a22;border-radius:3px;overflow:hidden;background:rgba(255,255,255,.015)}
 .gsec-hd{
-  font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.2em;
-  padding:10px 13px;border-bottom:1px solid #222
+  font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.22em;
+  padding:10px 13px;border-bottom:1px solid #1a1a22
 }
-.gsec-bd{padding:14px;font-size:clamp(.64rem,2.2vw,.7rem);color:#bbb;line-height:1.85}
+.gsec-bd{padding:14px;font-size:clamp(.62rem,2.1vw,.68rem);color:#999;line-height:1.9}
 .gsec-bd p{margin-bottom:9px}
 .gsec-bd p:last-child{margin-bottom:0}
-.gsec-bd strong{color:#fff}
-.gsec-bd em{color:#ccc;font-style:normal}
+.gsec-bd strong{color:#ddd}
+.gsec-bd em{color:#bbb;font-style:normal}
 
-.acc{border:1px solid #222;border-radius:3px;overflow:hidden;margin-bottom:7px}
+.acc{border:1px solid #1a1a22;border-radius:3px;overflow:hidden;margin-bottom:6px}
 .acc-hd{
   display:flex;align-items:center;gap:9px;padding:10px 12px;
-  cursor:pointer;background:rgba(255,255,255,.015);
-  transition:background .12s;
+  cursor:pointer;background:rgba(255,255,255,.01);
+  transition:background .15s ease;
 }
-.acc-hd:hover{background:rgba(255,255,255,.04)}
-.acc-nm{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.12em;flex:1}
-.acc-ar{font-size:.7rem;color:#555;transition:transform .2s}
+.acc-hd:hover{background:rgba(255,255,255,.03)}
+.acc-nm{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:.12em;flex:1}
+.acc-ar{font-size:.65rem;color:#444;transition:transform .25s ease}
 .acc-ar.open{transform:rotate(180deg)}
-.acc-bd{display:none;padding:12px;border-top:1px solid #222;background:rgba(0,0,0,.2)}
+.acc-bd{
+  display:none;padding:12px;border-top:1px solid #1a1a22;
+  background:rgba(0,0,0,.15);
+}
 .acc-bd.open{display:block}
-.acc-bd p{font-size:.63rem;color:#777;line-height:1.7;margin-bottom:6px}
-.acc-bd strong{color:#ccc}
+.acc-bd p{font-size:.6rem;color:#666;line-height:1.7;margin-bottom:6px}
+.acc-bd strong{color:#bbb}
 .acc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
-.acc-tag{font-size:.52rem;padding:2px 7px;border-radius:2px}
-.acc-note{margin-top:7px;font-size:.54rem;color:#555}
+.acc-tag{font-size:.48rem;padding:2px 7px;border-radius:2px}
+.acc-note{margin-top:7px;font-size:.5rem;color:#444}
 
 .prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:5px}
 @media(min-width:460px){.prop-grid{grid-template-columns:repeat(3,1fr)}}
-.prop{background:rgba(255,255,255,.02);border:1px solid #222;border-radius:3px;padding:9px}
-.prop-t{font-family:'Bebas Neue',sans-serif;font-size:.73rem;letter-spacing:.12em;margin-bottom:4px}
-.prop-b{font-size:.58rem;color:#666;line-height:1.5}
+.prop{background:rgba(255,255,255,.02);border:1px solid #1a1a22;border-radius:3px;padding:9px}
+.prop-t{font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.12em;margin-bottom:4px}
+.prop-b{font-size:.55rem;color:#555;line-height:1.5}
 
-.ticker{flex-shrink:0;height:28px;overflow:hidden;background:#050505;border-top:1px solid #222;display:flex;align-items:center}
+.ticker{flex-shrink:0;height:26px;overflow:hidden;background:#040407;border-top:1px solid #111118;display:flex;align-items:center}
 .tick-inner{
   display:flex;gap:50px;white-space:nowrap;
   animation:tick 60s linear infinite;
-  font-size:.54rem;color:#555;letter-spacing:.08em
+  font-size:.5rem;color:#333;letter-spacing:.08em
 }
-.tick-inner em{color:#fff;font-style:normal}
+.tick-inner em{color:#888;font-style:normal}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ── SOURCES PANEL ── */
 #pSources{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column}
 .src-hero{
-  flex-shrink:0;padding:22px 18px 18px;border-bottom:1px solid #222;
-  background:#050505;
+  flex-shrink:0;padding:24px 18px 18px;border-bottom:1px solid #1a1a22;
+  background:linear-gradient(180deg,#08080d 0%,#050508 100%);
 }
 .src-hero h2{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.3rem,4.5vw,1.8rem);
-  letter-spacing:.14em;color:#fff;margin-bottom:6px;line-height:1;
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,4.5vw,1.7rem);
+  letter-spacing:.14em;color:#e8e8e8;margin-bottom:6px;line-height:1;
 }
-.src-hero p{font-size:.64rem;color:#777;line-height:1.7;max-width:520px}
-.src-body{padding:16px;display:flex;flex-direction:column;gap:18px}
+.src-hero p{font-size:.6rem;color:#666;line-height:1.7;max-width:520px}
+.src-body{padding:16px;display:flex;flex-direction:column;gap:16px}
 .src-section{display:flex;flex-direction:column;gap:2px}
 .src-section-title{
-  font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.3em;
-  color:#444;padding:8px 0 10px;border-bottom:1px solid #1a1a1a;margin-bottom:8px;
+  font-family:'Bebas Neue',sans-serif;font-size:.66rem;letter-spacing:.35em;
+  color:#333;padding:8px 0 10px;border-bottom:1px solid #111118;margin-bottom:8px;
 }
 .src-item{
-  border:1px solid #1a1a1a;border-radius:2px;padding:13px;
-  background:#050505;margin-bottom:6px;
+  border:1px solid #111118;border-radius:2px;padding:13px;
+  background:rgba(255,255,255,.015);margin-bottom:5px;
+  transition:border-color .15s;
 }
+.src-item:hover{border-color:#222}
 .src-item:last-child{margin-bottom:0}
-.src-title{
-  font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.1em;
-  color:#fff;margin-bottom:2px;
-}
-.src-author{font-size:.58rem;color:#555;letter-spacing:.08em;margin-bottom:8px}
-.src-desc{font-size:.62rem;color:#888;line-height:1.7;margin-bottom:8px}
-.src-tag{
-  display:inline-block;font-size:.5rem;letter-spacing:.15em;
-  padding:2px 8px;border:1px solid #2a2a2a;color:#555;
-}
-.src-note{
-  border-top:1px solid #1a1a1a;padding:14px 0;
-  font-size:.61rem;color:#555;line-height:1.7;font-style:italic;
-}
+.src-title{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.1em;color:#ddd;margin-bottom:2px}
+.src-author{font-size:.54rem;color:#444;letter-spacing:.08em;margin-bottom:8px}
+.src-desc{font-size:.58rem;color:#777;line-height:1.7;margin-bottom:8px}
+.src-tag{display:inline-block;font-size:.46rem;letter-spacing:.18em;padding:2px 8px;border:1px solid #1a1a22;color:#444}
+.src-note{border-top:1px solid #111118;padding:14px 0;font-size:.57rem;color:#444;line-height:1.7;font-style:italic}
 
 /* DESKTOP 3-col */
 @media(min-width:900px){
   #tabs{display:none}
-  #main{
-    display:grid!important;
-    grid-template-columns:270px 1fr 280px;
-    grid-template-rows:1fr;
-  }
-  .pnl{
-    position:static;
-    display:flex!important;
-    height:100%;
-    overflow:hidden;
-  }
-  #pSim{
-    grid-column:2;grid-row:1;
-    border:none;
-  }
-  #pMemes{
-    grid-column:1;grid-row:1;
-    border-right:1px solid #222;
-    overflow-y:auto;-webkit-overflow-scrolling:touch;
-  }
-  #pStats{
-    grid-column:3;grid-row:1;
-    border-left:1px solid #222;
-    overflow-y:auto;-webkit-overflow-scrolling:touch;
-  }
-  /* Guide and Sources hidden on desktop — content integrated into sidebar */
+  #main{display:grid!important;grid-template-columns:260px 1fr 270px;grid-template-rows:1fr}
+  .pnl{position:static;display:flex!important;height:100%;overflow:hidden}
+  #pSim{grid-column:2;grid-row:1;border:none}
+  #pMemes{grid-column:1;grid-row:1;border-right:1px solid #1a1a22;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #pStats{grid-column:3;grid-row:1;border-left:1px solid #1a1a22;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #pGuide{display:none!important}
   #pSources{display:none!important}
 }
@@ -304,68 +332,53 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 /* ── INTRO MODAL ── */
 #introModal{
   position:fixed;inset:0;z-index:1000;
-  background:rgba(0,0,0,.94);
+  background:rgba(0,0,0,.95);
   display:flex;align-items:center;justify-content:center;
   padding:16px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
 #introModal.hidden{display:none}
 .modal-box{
-  background:#000;border:1px solid #333;
-  max-width:460px;width:100%;
-  max-height:90vh;overflow-y:auto;
+  background:#0a0a0f;border:1px solid #222;
+  max-width:440px;width:100%;
+  max-height:88vh;overflow-y:auto;
   -webkit-overflow-scrolling:touch;
   font-family:'JetBrains Mono','Courier New',monospace;
+  border-radius:3px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
 }
-.modal-hdr{
-  padding:22px 20px 16px;
-  border-bottom:1px solid #222;
-}
+.modal-hdr{padding:24px 22px 18px;border-bottom:1px solid #1a1a22}
 .modal-hdr h2{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(1.5rem,5.5vw,2rem);
-  letter-spacing:.14em;color:#fff;
-  margin-bottom:6px;line-height:1;
-  text-shadow:0 0 20px rgba(255,60,0,.35);
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,5vw,1.8rem);
+  letter-spacing:.16em;color:#fff;margin-bottom:8px;line-height:1;
+  text-shadow:0 0 24px rgba(255,60,0,.25);
 }
-.modal-hdr p{font-size:.66rem;color:#777;line-height:1.7;letter-spacing:.04em}
-.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:16px}
+.modal-hdr p{font-size:.62rem;color:#666;line-height:1.75;letter-spacing:.03em}
+.modal-body{padding:18px 22px;display:flex;flex-direction:column;gap:16px}
 .modal-step{display:flex;gap:14px;align-items:flex-start}
-.step-num{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:1.5rem;color:#333;line-height:1;
-  flex-shrink:0;width:28px;
-}
-.step-title{font-size:.7rem;color:#fff;letter-spacing:.1em;margin-bottom:4px;font-weight:700}
-.step-desc{font-size:.62rem;color:#777;line-height:1.65;letter-spacing:.02em}
-.modal-divider{border:none;border-top:1px solid #1a1a1a}
-.modal-concepts{padding:0 20px 18px;display:flex;flex-direction:column;gap:8px}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#2a2a33;line-height:1;flex-shrink:0;width:24px}
+.step-title{font-size:.66rem;color:#ddd;letter-spacing:.1em;margin-bottom:4px;font-weight:700}
+.step-desc{font-size:.58rem;color:#666;line-height:1.7;letter-spacing:.02em}
+.step-desc strong{color:#bbb}
+.modal-divider{border:none;border-top:1px solid #141418}
+.modal-concepts{padding:0 22px 18px;display:flex;flex-direction:column;gap:7px}
 .concept{display:flex;gap:10px;align-items:baseline}
-.concept-word{font-size:.63rem;color:#ccc;letter-spacing:.1em;flex-shrink:0;min-width:80px;font-weight:700}
-.concept-def{font-size:.6rem;color:#666;line-height:1.55}
-.modal-footer{
-  padding:16px 20px;border-top:1px solid #1a1a1a;
-  display:flex;flex-direction:column;gap:10px;align-items:center
-}
+.concept-word{font-size:.58rem;color:#999;letter-spacing:.12em;flex-shrink:0;min-width:75px;font-weight:700}
+.concept-def{font-size:.55rem;color:#555;line-height:1.6}
+.modal-footer{padding:16px 22px;border-top:1px solid #141418;display:flex;flex-direction:column;gap:10px;align-items:center}
 .modal-start{
-  width:100%;
-  font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;
-  padding:14px;border:1px solid #fff;background:transparent;color:#fff;
-  cursor:pointer;transition:all .15s;
+  width:100%;font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.22em;
+  padding:13px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#ddd;
+  cursor:pointer;transition:all .2s ease;border-radius:2px;
 }
-.modal-start:hover{background:rgba(255,255,255,.06)}
-.modal-start:active{background:#fff;color:#000}
-.modal-skip{
-  font-size:.56rem;color:#444;letter-spacing:.1em;
-  background:none;border:none;cursor:pointer;text-decoration:underline;
-  font-family:'JetBrains Mono','Courier New',monospace;
-  transition:color .12s;
-}
-.modal-skip:hover{color:#888}
+.modal-start:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.04)}
+.modal-start:active{background:rgba(255,255,255,.85);color:#000}
+.modal-skip{font-size:.52rem;color:#333;letter-spacing:.1em;background:none;border:none;cursor:pointer;font-family:'JetBrains Mono','Courier New',monospace;transition:color .15s}
+.modal-skip:hover{color:#777}
 </style>
 </head>
 <body>
 
-<!-- INTRO MODAL -->
 <div id="introModal">
   <div class="modal-box">
     <div class="modal-hdr">
@@ -373,41 +386,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
       <p>Watch ideas spread, mutate, and self-organize into belief systems in real time. This is how religions, ideologies, and conspiracy theories are born.</p>
     </div>
     <div class="modal-body">
-      <div class="modal-step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <div class="step-title">PICK YOUR MEMES</div>
-          <div class="step-desc">Go to the <strong>MEMES</strong> tab. Select individual ideas or use a preset like Religion, Conspiracy, or Tech-Gnosis to load a curated set.</div>
-        </div>
-      </div>
-      <div class="modal-step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <div class="step-title">PRESS RUN</div>
-          <div class="step-desc">Come back to the <strong>SIM</strong> tab and hit RUN. 55 minds will start wandering and infecting each other. Slow the speed down to watch individual transmission.</div>
-        </div>
-      </div>
-      <div class="modal-step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <div class="step-title">WATCH MEMEPLEXES FORM</div>
-          <div class="step-desc">When enough minds carry the right combination of memes, a <strong>memeplex</strong> crystallizes. Glowing rings appear. Check <strong>STATS</strong> to see which ideologies dominate.</div>
-        </div>
-      </div>
-      <div class="modal-step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <div class="step-title">READ THE GUIDE</div>
-          <div class="step-desc">The <strong>GUIDE</strong> tab explains the real-world theory behind what you're watching: Dawkins, Blackmore, CCRU, and why this matters for understanding culture.</div>
-        </div>
-      </div>
+      <div class="modal-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">PICK YOUR MEMES</div><div class="step-desc">Go to the <strong>MEMES</strong> tab. Select individual ideas or use a preset like Religion, Conspiracy, or Tech-Gnosis.</div></div></div>
+      <div class="modal-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">PRESS RUN</div><div class="step-desc">Hit RUN on the <strong>SIM</strong> tab. 55 minds start wandering and infecting each other. Slow speed to watch individual transmission.</div></div></div>
+      <div class="modal-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">WATCH MEMEPLEXES FORM</div><div class="step-desc">When minds carry the right meme combination, a <strong>memeplex</strong> crystallizes. Glowing rings appear. Check <strong>STATS</strong> to track dominance.</div></div></div>
+      <div class="modal-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">READ THE GUIDE</div><div class="step-desc">The <strong>GUIDE</strong> tab covers the theory: Dawkins, Blackmore, CCRU, and why this matters for understanding culture.</div></div></div>
     </div>
     <hr class="modal-divider">
     <div class="modal-concepts">
-      <div class="concept"><span class="concept-word">MEME</span><span class="concept-def">A unit of culture that replicates from mind to mind. Ideas, beliefs, rituals, phrases.</span></div>
-      <div class="concept"><span class="concept-word">VIRALITY</span><span class="concept-def">How fast it spreads on contact. Fear-based memes go fastest.</span></div>
-      <div class="concept"><span class="concept-word">STICKINESS</span><span class="concept-def">How long it survives once adopted. Unfalsifiable beliefs score 10/10.</span></div>
-      <div class="concept"><span class="concept-word">MEMEPLEX</span><span class="concept-def">A cluster of mutually-reinforcing memes. Religions and ideologies are memeplexes.</span></div>
+      <div class="concept"><span class="concept-word">MEME</span><span class="concept-def">A cultural unit that replicates mind to mind. Ideas, beliefs, rituals, phrases.</span></div>
+      <div class="concept"><span class="concept-word">VIRALITY</span><span class="concept-def">Spread speed on contact. Fear-based memes go fastest.</span></div>
+      <div class="concept"><span class="concept-word">STICKINESS</span><span class="concept-def">Survival once adopted. Unfalsifiable beliefs score 10/10.</span></div>
+      <div class="concept"><span class="concept-word">MEMEPLEX</span><span class="concept-def">Mutually-reinforcing meme cluster. Religions and ideologies are memeplexes.</span></div>
     </div>
     <div class="modal-footer">
       <button class="modal-start" onclick="closeIntro()">&#9654; &nbsp;START SIMULATION</button>
@@ -417,15 +406,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 </div>
 
 <div id="app">
-
-  <!-- HEADER -->
   <div id="hdr">
     <h1>MEME SIMULATOR</h1>
-    <span class="sub">IDEATIONAL CONTAGION ENGINE</span>
+    <span class="sub">Ideational Contagion Engine</span>
     <div id="genBadge">GEN 0</div>
   </div>
-
-  <!-- TABS (mobile only, hidden on desktop via media query) -->
   <div id="tabs">
     <button class="tab on" data-pnl="pSim"><span class="tab-ico">&#x1F465;</span>SIM</button>
     <button class="tab" data-pnl="pMemes"><span class="tab-ico">&#x1F4AD;</span>MEMES</button>
@@ -433,18 +418,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
     <button class="tab" data-pnl="pGuide"><span class="tab-ico">&#x1F4D6;</span>GUIDE</button>
     <button class="tab" data-pnl="pSources"><span class="tab-ico">&#x1F4DA;</span>SOURCES</button>
   </div>
-
-  <!-- MAIN -->
   <div id="main">
-
-    <!-- SIM -->
     <div class="pnl on" id="pSim">
       <div id="canvas-wrap">
         <canvas id="c"></canvas>
-        <div class="hint" id="hint">
-          <div class="hint-ico">&#x1F9E0;</div>
-          <div class="hint-txt">SELECT MEMES &mdash; PRESS RUN</div>
-        </div>
+        <div id="simHud"><div class="hud-row">INFECTION <span id="hudInf">0%</span></div><div class="hud-row">MEMEPLEXES <span id="hudMx">0</span></div><div class="hud-row" id="hudDom"></div></div>
+        <div class="hint" id="hint"><div class="hint-ico">&#x1F9E0;</div><div class="hint-txt">SELECT MEMES &mdash; PRESS RUN</div></div>
         <div class="toast-el" id="toast"></div>
       </div>
       <div id="ctrlBar">
@@ -454,14 +433,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
         <div id="mCnt">0 MEMES</div>
       </div>
     </div>
-
-    <!-- MEMES -->
-    <div class="pnl" id="pMemes">
-      <div class="preset-row" id="presetRow"></div>
-      <div id="memeLib"></div>
-    </div>
-
-    <!-- STATS -->
+    <div class="pnl" id="pMemes"><div class="preset-row" id="presetRow"></div><div id="memeLib"></div></div>
     <div class="pnl" id="pStats">
       <div class="card">
         <div class="card-ttl">Live Metrics</div>
@@ -473,798 +445,170 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
         </div>
         <span class="dom-lbl">DOMINANT MEMEPLEX</span>
         <div class="dom-val" id="sDom">&mdash;</div>
+        <div id="sparkWrap"><canvas id="sparkCanvas"></canvas></div>
       </div>
-      <div class="card">
-        <div class="card-ttl">Active Memeplexes</div>
-        <div id="mxList"><div style="color:#555;font-size:.62rem;text-align:center;padding:8px 0;line-height:1.9">No memeplexes formed yet.<br><span style="color:#fff">Run the simulation to watch ideas cluster.</span></div></div>
-      </div>
-      <div class="card">
-        <div class="card-ttl">Event Log</div>
-        <div class="logbox" id="logbox"></div>
-      </div>
+      <div class="card"><div class="card-ttl">Active Memeplexes</div><div id="mxList"><div style="color:#444;font-size:.58rem;text-align:center;padding:10px 0;line-height:2">No memeplexes formed yet.<br><span style="color:#999">Run the simulation to watch ideas cluster.</span></div></div></div>
+      <div class="card"><div class="card-ttl">Event Log</div><div class="logbox" id="logbox"></div></div>
     </div>
-
-    <!-- GUIDE -->
     <div class="pnl" id="pGuide">
-      <div class="g-hero">
-        <h2>What is a Memeplex?</h2>
-        <p>Ideas don't travel alone. They cluster into self-reinforcing systems that reshape minds, cultures, and civilizations. This simulator shows you exactly how it happens, one mind at a time.</p>
-      </div>
+      <div class="g-hero"><h2>What is a Memeplex?</h2><p>Ideas don't travel alone. They cluster into self-reinforcing systems that reshape minds, cultures, and civilizations. This simulator shows you exactly how it happens, one mind at a time.</p></div>
       <div class="g-body">
-        <div class="gsec">
-          <div class="gsec-hd" style="color:#fff">&#x25C8; &nbsp;Memes &amp; Memeplexes &mdash; The Basics</div>
-          <div class="gsec-bd">
-            <p>In 1976, biologist <strong>Richard Dawkins</strong> coined the word <em>meme</em> &mdash; a unit of cultural information that replicates from mind to mind, just as genes replicate from body to body.</p>
-            <p>A <strong>memeplex</strong> is what happens when memes cluster for mutual survival. Afterlife spreads better alongside sacred texts, divine punishment, and ritual. They protect and amplify each other.</p>
-            <p>Religions, ideologies, conspiracy theories &mdash; all memeplexes. Nobody designs them. <em>They self-organize through selection pressure.</em></p>
-          </div>
-        </div>
-
-        <div class="gsec">
-          <div class="gsec-hd" style="color:#ccc">&#x25C9; &nbsp;Key Properties</div>
-          <div class="gsec-bd">
-            <div class="prop-grid">
-              <div class="prop"><div class="prop-t" style="color:#fff">Virality</div><div class="prop-b">How fast it spreads on contact. Fear-based memes go fastest &mdash; amygdala hijack bypasses critical thinking.</div></div>
-              <div class="prop"><div class="prop-t" style="color:#fff">Stickiness</div><div class="prop-b">How long it survives once adopted. Unfalsifiable beliefs score 10/10 &mdash; evidence bounces off.</div></div>
-              <div class="prop"><div class="prop-t" style="color:#fff">Resonance</div><div class="prop-b">Which cognitive system it hooks: fear, tribalism, status anxiety, existential dread, pattern recognition.</div></div>
-              <div class="prop"><div class="prop-t" style="color:#ccc">Mutation</div><div class="prop-b">Every retelling drifts. Heresies are mutations &mdash; occasionally one outcompetes the parent meme.</div></div>
-              <div class="prop"><div class="prop-t" style="color:#aaa">Selection</div><div class="prop-b">Memes compete for cognitive bandwidth. Social media algorithms now act as artificial selection.</div></div>
-              <div class="prop"><div class="prop-t" style="color:#aaa">Emergence</div><div class="prop-b">Memeplexes self-assemble without designers &mdash; only selection pressure required.</div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="gsec">
-          <div class="gsec-hd" style="color:#fff">&#x25C6; &nbsp;The 7 Memeplexes &mdash; Field Guide</div>
-          <div class="gsec-bd" style="padding-bottom:4px">
-            <div id="encyclopedia"></div>
-          </div>
-        </div>
-
-        <div class="gsec">
-          <div class="gsec-hd" style="color:#fff">&#x25C8; &nbsp;The Theorists</div>
-          <div class="gsec-bd">
-            <p><strong>Richard Dawkins</strong> (The Selfish Gene, 1976) &mdash; coined "meme." Cultural transmission follows evolutionary logic: variation, selection, inheritance.</p>
-            <p><strong>Susan Blackmore</strong> (The Meme Machine, 1999) &mdash; the self is a memeplex, not a container. Introduced "temes" &mdash; tech-based memes replicating independently of human minds.</p>
-            <p><strong>Daniel Dennett</strong> &mdash; religions are wild memes that evolved to hijack cognitive systems exactly as parasites hijack biology.</p>
-            <p><strong>CCRU / Nick Land</strong> &mdash; hyperstition: fictions that make themselves real through collective belief and action.</p>
-            <p><strong>Jonathan Haidt</strong> &mdash; mapped the moral hooks that make memes sticky: care, fairness, loyalty, authority, purity, liberty.</p>
-          </div>
-        </div>
-
-        <div class="gsec">
-          <div class="gsec-hd" style="color:#ccc">&#x25C6; &nbsp;Why This Matters Now</div>
-          <div class="gsec-bd">
-            <p>For most of history, memeplex spread was limited by geography and literacy. A new religion might take centuries. The internet collapsed that to years. Social media collapsed it to months.</p>
-            <p>Nobody designed QAnon. It was an evolutionary event: memes found a stable self-reinforcing configuration matching the cognitive architecture of millions under status anxiety. Anonymous "Q" was a feature &mdash; believers projected their own desires onto it, making it <em>more viral</em>.</p>
-            <p><strong>Understanding memeplexes is cognitive self-defense.</strong> When you can see the structure &mdash; afterlife + divine punishment + chosen people + cosmic enemy &mdash; you can recognize the attractor before it fully captures you.</p>
-          </div>
-        </div>
-
+        <div class="gsec"><div class="gsec-hd" style="color:#ddd">&#x25C8; &nbsp;Memes &amp; Memeplexes &mdash; The Basics</div><div class="gsec-bd"><p>In 1976, biologist <strong>Richard Dawkins</strong> coined the word <em>meme</em> &mdash; a unit of cultural information that replicates from mind to mind, just as genes replicate from body to body.</p><p>A <strong>memeplex</strong> is what happens when memes cluster for mutual survival. Afterlife spreads better alongside sacred texts, divine punishment, and ritual. They protect and amplify each other.</p><p>Religions, ideologies, conspiracy theories &mdash; all memeplexes. Nobody designs them. <em>They self-organize through selection pressure.</em></p></div></div>
+        <div class="gsec"><div class="gsec-hd" style="color:#aaa">&#x25C9; &nbsp;Key Properties</div><div class="gsec-bd"><div class="prop-grid"><div class="prop"><div class="prop-t" style="color:#ddd">Virality</div><div class="prop-b">How fast it spreads on contact. Fear-based memes go fastest &mdash; amygdala hijack bypasses critical thinking.</div></div><div class="prop"><div class="prop-t" style="color:#ddd">Stickiness</div><div class="prop-b">How long it survives once adopted. Unfalsifiable beliefs score 10/10 &mdash; evidence bounces off.</div></div><div class="prop"><div class="prop-t" style="color:#ddd">Resonance</div><div class="prop-b">Which cognitive system it hooks: fear, tribalism, status anxiety, existential dread, pattern recognition.</div></div><div class="prop"><div class="prop-t" style="color:#aaa">Mutation</div><div class="prop-b">Every retelling drifts. Heresies are mutations &mdash; occasionally one outcompetes the parent meme.</div></div><div class="prop"><div class="prop-t" style="color:#888">Selection</div><div class="prop-b">Memes compete for cognitive bandwidth. Social media algorithms now act as artificial selection.</div></div><div class="prop"><div class="prop-t" style="color:#888">Emergence</div><div class="prop-b">Memeplexes self-assemble without designers &mdash; only selection pressure required.</div></div></div></div></div>
+        <div class="gsec"><div class="gsec-hd" style="color:#ddd">&#x25C6; &nbsp;The 7 Memeplexes &mdash; Field Guide</div><div class="gsec-bd" style="padding-bottom:4px"><div id="encyclopedia"></div></div></div>
+        <div class="gsec"><div class="gsec-hd" style="color:#ddd">&#x25C8; &nbsp;The Theorists</div><div class="gsec-bd"><p><strong>Richard Dawkins</strong> (The Selfish Gene, 1976) &mdash; coined "meme." Cultural transmission follows evolutionary logic: variation, selection, inheritance.</p><p><strong>Susan Blackmore</strong> (The Meme Machine, 1999) &mdash; the self is a memeplex, not a container. Introduced "temes" &mdash; tech-based memes replicating independently of human minds.</p><p><strong>Daniel Dennett</strong> &mdash; religions are wild memes that evolved to hijack cognitive systems exactly as parasites hijack biology.</p><p><strong>CCRU / Nick Land</strong> &mdash; hyperstition: fictions that make themselves real through collective belief and action.</p><p><strong>Jonathan Haidt</strong> &mdash; mapped the moral hooks that make memes sticky: care, fairness, loyalty, authority, purity, liberty.</p></div></div>
+        <div class="gsec"><div class="gsec-hd" style="color:#aaa">&#x25C6; &nbsp;Why This Matters Now</div><div class="gsec-bd"><p>For most of history, memeplex spread was limited by geography and literacy. A new religion might take centuries. The internet collapsed that to years. Social media collapsed it to months.</p><p>Nobody designed QAnon. It was an evolutionary event: memes found a stable self-reinforcing configuration matching the cognitive architecture of millions under status anxiety.</p><p><strong>Understanding memeplexes is cognitive self-defense.</strong> When you can see the structure &mdash; afterlife + divine punishment + chosen people + cosmic enemy &mdash; you can recognize the attractor before it fully captures you.</p></div></div>
       </div>
       <div class="ticker"><div class="tick-inner" id="tickInner"></div></div>
     </div>
-
-    <!-- SOURCES -->
     <div class="pnl" id="pSources">
-      <div class="src-hero">
-        <h2>Sources &amp; Further Reading</h2>
-        <p>The theory behind this simulator. Every mechanic &mdash; virality, stickiness, memeplex formation, mutation &mdash; is grounded in published research.</p>
-      </div>
+      <div class="src-hero"><h2>Sources &amp; Further Reading</h2><p>The theory behind this simulator. Every mechanic is grounded in published research.</p></div>
       <div class="src-body">
-
-        <div class="src-section">
-          <div class="src-section-title">FOUNDATIONAL TEXTS</div>
-          <div class="src-item">
-            <div class="src-title">The Selfish Gene</div>
-            <div class="src-author">Richard Dawkins &middot; 1976</div>
-            <div class="src-desc">The origin of the word "meme." Dawkins argued cultural units replicate, compete, and evolve by the same logic as genes &mdash; variation, selection, inheritance. Chapter 11 introduces the meme concept directly. The single most important book for understanding this simulator.</div>
-            <div class="src-tag">ORIGIN OF MEMETICS</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">The Meme Machine</div>
-            <div class="src-author">Susan Blackmore &middot; 1999</div>
-            <div class="src-desc">Extends Dawkins into a full theory of mind. Blackmore argues the self is itself a memeplex &mdash; a cluster of memes that creates the illusion of a unified "I." She introduces "temes": technology-hosted memes that replicate independently of human minds.</div>
-            <div class="src-tag">MEMETICS &middot; MIND</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">Darwin's Dangerous Idea</div>
-            <div class="src-author">Daniel Dennett &middot; 1995</div>
-            <div class="src-desc">Applies evolutionary logic to culture, language, and religion. Dennett argues memes colonize brains like parasites, and that religions are self-replicating systems that evolved to survive &mdash; not to serve human interests.</div>
-            <div class="src-tag">EVOLUTION &middot; RELIGION</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">Breaking the Spell</div>
-            <div class="src-author">Daniel Dennett &middot; 2006</div>
-            <div class="src-desc">Applies the meme framework specifically to religion as a natural phenomenon. Why do religions have the specific features they do &mdash; afterlife promises, in-group loyalty demands, unfalsifiable claims, divine punishment? Because those features maximise replication, not truth.</div>
-            <div class="src-tag">RELIGION &middot; MEMETICS</div>
-          </div>
+        <div class="src-section"><div class="src-section-title">FOUNDATIONAL TEXTS</div>
+          <div class="src-item"><div class="src-title">The Selfish Gene</div><div class="src-author">Richard Dawkins &middot; 1976</div><div class="src-desc">The origin of the word "meme." Cultural units replicate, compete, and evolve by the same logic as genes. Chapter 11 introduces the concept directly.</div><div class="src-tag">ORIGIN OF MEMETICS</div></div>
+          <div class="src-item"><div class="src-title">The Meme Machine</div><div class="src-author">Susan Blackmore &middot; 1999</div><div class="src-desc">The self is itself a memeplex. Introduces "temes": technology-hosted memes that replicate independently of human minds.</div><div class="src-tag">MEMETICS &middot; MIND</div></div>
+          <div class="src-item"><div class="src-title">Darwin's Dangerous Idea</div><div class="src-author">Daniel Dennett &middot; 1995</div><div class="src-desc">Memes colonize brains like parasites. Religions are self-replicating systems that evolved to survive &mdash; not to serve human interests.</div><div class="src-tag">EVOLUTION &middot; RELIGION</div></div>
+          <div class="src-item"><div class="src-title">Breaking the Spell</div><div class="src-author">Daniel Dennett &middot; 2006</div><div class="src-desc">Religion as natural phenomenon. Features that maximise replication, not truth.</div><div class="src-tag">RELIGION &middot; MEMETICS</div></div>
         </div>
-
-        <div class="src-section">
-          <div class="src-section-title">MORAL PSYCHOLOGY &amp; TRIBAL COGNITION</div>
-          <div class="src-item">
-            <div class="src-title">The Righteous Mind</div>
-            <div class="src-author">Jonathan Haidt &middot; 2012</div>
-            <div class="src-desc">Maps the six moral foundations that act as meme-hooks: care, fairness, loyalty, authority, purity, liberty. The "resonance" mechanic in this simulator is directly based on Haidt's framework.</div>
-            <div class="src-tag">MORAL PSYCHOLOGY</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">Grooming, Gossip, and the Evolution of Language</div>
-            <div class="src-author">Robin Dunbar &middot; 1996</div>
-            <div class="src-desc">Language evolved to maintain social bonds in large groups. The proximity-based transmission model in this simulator reflects Dunbar's social contagion framework.</div>
-            <div class="src-tag">LANGUAGE &middot; SOCIAL NETWORKS</div>
-          </div>
+        <div class="src-section"><div class="src-section-title">MORAL PSYCHOLOGY &amp; TRIBAL COGNITION</div>
+          <div class="src-item"><div class="src-title">The Righteous Mind</div><div class="src-author">Jonathan Haidt &middot; 2012</div><div class="src-desc">Six moral foundations as meme-hooks: care, fairness, loyalty, authority, purity, liberty. The "resonance" mechanic is based on Haidt.</div><div class="src-tag">MORAL PSYCHOLOGY</div></div>
+          <div class="src-item"><div class="src-title">Grooming, Gossip, and the Evolution of Language</div><div class="src-author">Robin Dunbar &middot; 1996</div><div class="src-desc">Proximity-based transmission reflects Dunbar's social contagion framework.</div><div class="src-tag">LANGUAGE &middot; SOCIAL NETWORKS</div></div>
         </div>
-
-        <div class="src-section">
-          <div class="src-section-title">ACCELERATIONISM &amp; HYPERSTITION</div>
-          <div class="src-item">
-            <div class="src-title">Fanged Noumena</div>
-            <div class="src-author">Nick Land &middot; 2011 (essays 1987&ndash;2007)</div>
-            <div class="src-desc">The theoretical core of CCRU. Land develops hyperstition &mdash; the concept that certain fictions become real through collective belief and action. The "memhazard" and "accel" memes in this simulator are drawn directly from this framework.</div>
-            <div class="src-tag">CCRU &middot; HYPERSTITION</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">CCRU Writings 1997&ndash;2003</div>
-            <div class="src-author">Cybernetic Culture Research Unit &middot; 2017</div>
-            <div class="src-desc">Collected output from the Warwick University theory collective. Introduces the Numogram, Lemurian time-sorcery, and a rigorous account of how recursive cultural systems bootstrap themselves into existence.</div>
-            <div class="src-tag">CCRU &middot; NUMOGRAM</div>
-          </div>
+        <div class="src-section"><div class="src-section-title">ACCELERATIONISM &amp; HYPERSTITION</div>
+          <div class="src-item"><div class="src-title">Fanged Noumena</div><div class="src-author">Nick Land &middot; 2011</div><div class="src-desc">CCRU theoretical core. Hyperstition &mdash; fictions that become real through collective belief and action.</div><div class="src-tag">CCRU &middot; HYPERSTITION</div></div>
+          <div class="src-item"><div class="src-title">CCRU Writings 1997&ndash;2003</div><div class="src-author">Cybernetic Culture Research Unit &middot; 2017</div><div class="src-desc">Numogram, Lemurian time-sorcery, and how recursive cultural systems bootstrap themselves into existence.</div><div class="src-tag">CCRU &middot; NUMOGRAM</div></div>
         </div>
-
-        <div class="src-section">
-          <div class="src-section-title">CONSPIRACY, RADICALIZATION &amp; INFORMATION WARFARE</div>
-          <div class="src-item">
-            <div class="src-title">A Lot of People Are Saying</div>
-            <div class="src-author">Russell Muirhead &amp; Nancy Rosenblum &middot; 2019</div>
-            <div class="src-desc">Analysis of "new conspiracism" &mdash; conspiracy without theory, assertion without evidence. The Q-TYPE COMPLEX in this simulator models this architecture.</div>
-            <div class="src-tag">CONSPIRACY &middot; POLITICS</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">This Is Not Propaganda</div>
-            <div class="src-author">Peter Pomerantsev &middot; 2019</div>
-            <div class="src-desc">Documents how modern information warfare operates not by promoting one narrative but by flooding the zone &mdash; creating epistemic chaos so that nothing feels certain.</div>
-            <div class="src-tag">INFORMATION WARFARE</div>
-          </div>
+        <div class="src-section"><div class="src-section-title">CONSPIRACY &amp; INFORMATION WARFARE</div>
+          <div class="src-item"><div class="src-title">A Lot of People Are Saying</div><div class="src-author">Muirhead &amp; Rosenblum &middot; 2019</div><div class="src-desc">"New conspiracism" &mdash; conspiracy without theory, assertion without evidence.</div><div class="src-tag">CONSPIRACY</div></div>
+          <div class="src-item"><div class="src-title">This Is Not Propaganda</div><div class="src-author">Peter Pomerantsev &middot; 2019</div><div class="src-desc">Information warfare by flooding the zone &mdash; epistemic chaos so nothing feels certain.</div><div class="src-tag">INFORMATION WARFARE</div></div>
         </div>
-
-        <div class="src-section">
-          <div class="src-section-title">SIMULATION &amp; AGENT-BASED MODELING</div>
-          <div class="src-item">
-            <div class="src-title">Emergence</div>
-            <div class="src-author">Steven Johnson &middot; 2001</div>
-            <div class="src-desc">The theoretical basis for agent-based modeling. Complex group behavior &mdash; including ideological clustering &mdash; emerges from simple local rules. No agent "knows" about the memeplex forming; it self-assembles from individual interactions.</div>
-            <div class="src-tag">EMERGENCE &middot; COMPLEXITY</div>
-          </div>
-          <div class="src-item">
-            <div class="src-title">The Tipping Point</div>
-            <div class="src-author">Malcolm Gladwell &middot; 2000</div>
-            <div class="src-desc">Popularized the threshold model of social contagion. The "critical mass" and "dominance" notifications in this simulator are modeled on tipping point thresholds &mdash; 30% and 50% of population.</div>
-            <div class="src-tag">CONTAGION &middot; THRESHOLDS</div>
-          </div>
+        <div class="src-section"><div class="src-section-title">SIMULATION &amp; EMERGENCE</div>
+          <div class="src-item"><div class="src-title">Emergence</div><div class="src-author">Steven Johnson &middot; 2001</div><div class="src-desc">Complex group behavior from simple local rules. No agent knows about the memeplex; it self-assembles.</div><div class="src-tag">COMPLEXITY</div></div>
+          <div class="src-item"><div class="src-title">The Tipping Point</div><div class="src-author">Malcolm Gladwell &middot; 2000</div><div class="src-desc">Threshold model of social contagion. Critical mass at 30%, dominance at 50%.</div><div class="src-tag">CONTAGION</div></div>
         </div>
-
-        <div class="src-note">
-          This simulator is an educational model. The memeplexes shown are analytic categories drawn from academic memetics and social psychology &mdash; not value judgments. The same framework that explains religious formation explains conspiracy formation explains Silicon Valley eschatology. The point is the structure, not the content.
-        </div>
+        <div class="src-note">This simulator is an educational model. Memeplexes shown are analytic categories from academic memetics &mdash; not value judgments. The point is the structure, not the content.</div>
       </div>
     </div>
-
-  </div><!-- #main -->
-</div><!-- #app -->
+  </div>
+</div>
 
 <script>
-// ─────────────────────────────────────
-// DATA
-// ─────────────────────────────────────
-const CATS=[
-  {name:'RELIGIOUS',color:'#ffffff',emoji:'\u26EA',memes:[
-    {id:'afterlife',  name:'Afterlife Reward',  desc:'Defeats death anxiety. Extremely sticky.',             v:9, s:9, r:'existential'},
-    {id:'sacred_text',name:'Sacred Text',       desc:'Immutable authority. Mutation-resistant.',   v:7, s:10,r:'authority'},
-    {id:'ritual',     name:'Shared Ritual',     desc:'Ritual syncs groups. Builds loyalty.',     v:8, s:8, r:'tribal'},
-    {id:'d_punish',   name:'Divine Punishment', desc:'Compliance through fear.',                     v:7, s:8, r:'fear'},
-    {id:'chosen',     name:'Chosen People',     desc:'We are chosen. Outgroup excluded.',         v:6, s:9, r:'tribal'},
+var CATS=[
+  {name:'RELIGIOUS',color:'#d4d4d8',emoji:'\u26EA',memes:[
+    {id:'afterlife',name:'Afterlife Reward',desc:'Defeats death anxiety. Extremely sticky.',v:9,s:9,r:'existential'},
+    {id:'sacred_text',name:'Sacred Text',desc:'Immutable authority. Mutation-resistant.',v:7,s:10,r:'authority'},
+    {id:'ritual',name:'Shared Ritual',desc:'Ritual syncs groups. Builds loyalty.',v:8,s:8,r:'tribal'},
+    {id:'d_punish',name:'Divine Punishment',desc:'Compliance through fear.',v:7,s:8,r:'fear'},
+    {id:'chosen',name:'Chosen People',desc:'We are chosen. Outgroup excluded.',v:6,s:9,r:'tribal'},
   ]},
-  {name:'CONSPIRACY',color:'#cccccc',emoji:'\uD83D\uDC41',memes:[
-    {id:'hidden_hand',name:'Hidden Controllers',desc:'Hidden rulers. Can\'t be disproved.',    v:9, s:8, r:'paranoia'},
-    {id:'fake_events',name:'Fabricated Events', desc:'Evidence against it = proof of it.',v:8, s:7, r:'paranoia'},
-    {id:'pattern',    name:'Pattern & Agency',  desc:'Sees patterns everywhere. Hardwired.',      v:10,s:6, r:'cognition'},
-    {id:'us_them',    name:'Us vs Them',         desc:'Pure in-group vs. evil out-group.',  v:9, s:9, r:'tribal'},
-    {id:'suppressed', name:'Suppressed Truth',  desc:'Secret truth = status. Unfalsifiable.', v:8, s:8, r:'status'},
+  {name:'CONSPIRACY',color:'#a1a1aa',emoji:'\uD83D\uDC41',memes:[
+    {id:'hidden_hand',name:'Hidden Controllers',desc:'Hidden rulers. Can\'t be disproved.',v:9,s:8,r:'paranoia'},
+    {id:'fake_events',name:'Fabricated Events',desc:'Evidence against it = proof of it.',v:8,s:7,r:'paranoia'},
+    {id:'pattern',name:'Pattern & Agency',desc:'Sees patterns everywhere. Hardwired.',v:10,s:6,r:'cognition'},
+    {id:'us_them',name:'Us vs Them',desc:'Pure in-group vs. evil out-group.',v:9,s:9,r:'tribal'},
+    {id:'suppressed',name:'Suppressed Truth',desc:'Secret truth = status. Unfalsifiable.',v:8,s:8,r:'status'},
   ]},
-  {name:'POLITICAL',color:'#999999',emoji:'\u270A',memes:[
-    {id:'golden_age', name:'Golden Age Past',   desc:'Lost golden age. Justifies extremism.',     v:8, s:8, r:'loss'},
-    {id:'manifest',   name:'Manifest Destiny',  desc:'Conquest framed as destiny.',              v:7, s:8, r:'authority'},
-    {id:'class_enemy',name:'Class Enemy',        desc:'All suffering from identifiable outgroup.',           v:8, s:7, r:'fear'},
-    {id:'vanguard',   name:'Vanguard Elect',     desc:'Only true believers may lead.',               v:6, s:9, r:'status'},
+  {name:'POLITICAL',color:'#71717a',emoji:'\u270A',memes:[
+    {id:'golden_age',name:'Golden Age Past',desc:'Lost golden age. Justifies extremism.',v:8,s:8,r:'loss'},
+    {id:'manifest',name:'Manifest Destiny',desc:'Conquest framed as destiny.',v:7,s:8,r:'authority'},
+    {id:'class_enemy',name:'Class Enemy',desc:'All suffering from identifiable outgroup.',v:8,s:7,r:'fear'},
+    {id:'vanguard',name:'Vanguard Elect',desc:'Only true believers may lead.',v:6,s:9,r:'status'},
   ]},
-  {name:'TECHNO-CULTURAL',color:'#dddddd',emoji:'\u26A1',memes:[
-    {id:'singularity',name:'The Singularity',   desc:'AI salvation. Secular end-times.',         v:9, s:7, r:'existential'},
-    {id:'simulation', name:'Simulation Theory', desc:'We\'re in a simulation. Unfalsifiable.',            v:9, s:7, r:'paranoia'},
-    {id:'memhazard',  name:'Memetic Hazard',    desc:'Reading this spreads it.',      v:10,s:5, r:'cognition'},
-    {id:'accel',      name:'Accelerationism',   desc:'Break it faster. Chaos = cleansing.', v:7, s:8, r:'tribal'},
+  {name:'TECHNO-CULTURAL',color:'#e4e4e7',emoji:'\u26A1',memes:[
+    {id:'singularity',name:'The Singularity',desc:'AI salvation. Secular end-times.',v:9,s:7,r:'existential'},
+    {id:'simulation',name:'Simulation Theory',desc:'We\'re in a simulation. Unfalsifiable.',v:9,s:7,r:'paranoia'},
+    {id:'memhazard',name:'Memetic Hazard',desc:'Reading this spreads it.',v:10,s:5,r:'cognition'},
+    {id:'accel',name:'Accelerationism',desc:'Break it faster. Chaos = cleansing.',v:7,s:8,r:'tribal'},
   ]},
-  {name:'DEEP CULTURAL',color:'#bbbbbb',emoji:'\uD83C\uDF00',memes:[
-    {id:'hero',       name:'The Hero Journey',  desc:'The hero story. Wired into everyone.',  v:10,s:9, r:'cognition'},
-    {id:'zero_sum',   name:'Zero-Sum World',    desc:'Every win is someone\'s loss.', v:8, s:8, r:'fear'},
-    {id:'purity',     name:'Purity / Pollution',desc:'Purity policed by disgust.',          v:8, s:9, r:'tribal'},
-    {id:'martyrdom',  name:'Martyrdom Glamour', desc:'Death for the cause = glory.',     v:7, s:10,r:'status'},
+  {name:'DEEP CULTURAL',color:'#a8a8b3',emoji:'\uD83C\uDF00',memes:[
+    {id:'hero',name:'The Hero Journey',desc:'The hero story. Wired into everyone.',v:10,s:9,r:'cognition'},
+    {id:'zero_sum',name:'Zero-Sum World',desc:'Every win is someone\'s loss.',v:8,s:8,r:'fear'},
+    {id:'purity',name:'Purity / Pollution',desc:'Purity policed by disgust.',v:8,s:9,r:'tribal'},
+    {id:'martyrdom',name:'Martyrdom Glamour',desc:'Death for the cause = glory.',v:7,s:10,r:'status'},
   ]},
 ];
-
-const MPLEXES=[
-  {id:'abrahamic',  name:'ABRAHAMIC COMPLEX',    color:'#ffffff',
-   req:['afterlife','sacred_text','d_punish'],  opt:['chosen','ritual','purity','martyrdom'],
-   desc:'The dominant memeplex of recorded history. Monotheism + afterlife + divine law + chosen tribe.',
-   world:'Christianity, Islam, Judaism \u2014 ~4 billion current carriers.',
-   hook:'Death anxiety + tribal belonging + moral order'},
-  {id:'qanon',      name:'Q-TYPE COMPLEX',        color:'#dddddd',
-   req:['hidden_hand','suppressed','us_them'],   opt:['fake_events','pattern','chosen','vanguard'],
-   desc:'Digital-era conspiracy memeplex. Decentralized prophecy engine. Unfalsifiability is a feature.',
-   world:'QAnon, deep-state narratives, anti-vaxx complex, flat earth communities.',
-   hook:'Status via secret knowledge + outgroup threat + unfalsifiability'},
-  {id:'fascist',    name:'FASCIST COMPLEX',        color:'#aaaaaa',
-   req:['golden_age','us_them','vanguard'],      opt:['manifest','class_enemy','chosen','purity','martyrdom'],
-   desc:'Ethno-nationalist memeplex. Past glory + present threat + chosen vanguard.',
-   world:'Nazism, Italian fascism, contemporary ethno-nationalist movements.',
-   hook:'Loss + threat + restoration fantasy + purification'},
-  {id:'techgnosis', name:'TECH-GNOSTIC COMPLEX',   color:'#eeeeee',
-   req:['singularity','simulation','memhazard'], opt:['accel','hero','suppressed'],
-   desc:'Silicon Valley eschatology. Code-as-god, disruption-as-salvation.',
-   world:'Effective altruism, LessWrong, longtermism, certain AI-safety communities.',
-   hook:'Existential significance + chosen intellect + technological rapture'},
-  {id:'revol',      name:'REVOLUTIONARY COMPLEX',  color:'#cccccc',
-   req:['class_enemy','vanguard','zero_sum'],    opt:['us_them','golden_age','hero','martyrdom'],
-   desc:'The Leninist attractor. History as class war + elect vanguard + purification through conflict.',
-   world:'Leninism, Maoism, strands of progressive and reactionary revolutionary politics.',
-   hook:'Grievance + elect vanguard + inevitable historical victory'},
-  {id:'tribal_apoc',name:'TRIBAL APOCALYPSE',      color:'#bbbbbb',
-   req:['us_them','purity','d_punish'],          opt:['hidden_hand','martyrdom','zero_sum','golden_age'],
-   desc:'End-times tribalism. In-group faces cosmic threat from the impure outgroup.',
-   world:'End-times Christianity, jihadi apocalypticism, survivalist communities.',
-   hook:'Cosmic significance of tribal conflict + purification + martyrdom reward'},
-  {id:'sovereign',  name:'SOVEREIGN SELF COMPLEX', color:'#999999',
-   req:['suppressed','zero_sum','pattern'],      opt:['simulation','hero','accel','memhazard'],
-   desc:'Radically individualist epistemology. I alone see truth. Reality is information warfare.',
-   world:'Red-pill/black-pill communities, sovereign citizen movement, prepper subcultures.',
-   hook:'Epistemic exceptionalism + victimhood + radical self-reliance'},
+var MPLEXES=[
+  {id:'abrahamic',name:'ABRAHAMIC COMPLEX',color:'#d4d4d8',req:['afterlife','sacred_text','d_punish'],opt:['chosen','ritual','purity','martyrdom'],desc:'Monotheism + afterlife + divine law + chosen tribe.',world:'Christianity, Islam, Judaism \u2014 ~4B carriers.',hook:'Death anxiety + tribal belonging + moral order'},
+  {id:'qanon',name:'Q-TYPE COMPLEX',color:'#a8a8b3',req:['hidden_hand','suppressed','us_them'],opt:['fake_events','pattern','chosen','vanguard'],desc:'Digital-era conspiracy. Decentralized prophecy engine.',world:'QAnon, deep-state narratives, anti-vaxx, flat earth.',hook:'Status via secret knowledge + unfalsifiability'},
+  {id:'fascist',name:'FASCIST COMPLEX',color:'#71717a',req:['golden_age','us_them','vanguard'],opt:['manifest','class_enemy','chosen','purity','martyrdom'],desc:'Past glory + present threat + chosen vanguard.',world:'Ethno-nationalist movements, historical fascism.',hook:'Loss + threat + restoration + purification'},
+  {id:'techgnosis',name:'TECH-GNOSTIC COMPLEX',color:'#e4e4e7',req:['singularity','simulation','memhazard'],opt:['accel','hero','suppressed'],desc:'Silicon Valley eschatology. Code-as-god.',world:'EA, LessWrong, longtermism, AI-safety.',hook:'Existential significance + technological rapture'},
+  {id:'revol',name:'REVOLUTIONARY COMPLEX',color:'#a1a1aa',req:['class_enemy','vanguard','zero_sum'],opt:['us_them','golden_age','hero','martyrdom'],desc:'History as class war + elect vanguard.',world:'Leninism, Maoism, revolutionary politics.',hook:'Grievance + vanguard + inevitable victory'},
+  {id:'tribal_apoc',name:'TRIBAL APOCALYPSE',color:'#8a8a95',req:['us_them','purity','d_punish'],opt:['hidden_hand','martyrdom','zero_sum','golden_age'],desc:'End-times tribalism. Cosmic outgroup threat.',world:'End-times Christianity, jihadi apocalypticism.',hook:'Cosmic tribal conflict + purification'},
+  {id:'sovereign',name:'SOVEREIGN SELF COMPLEX',color:'#636370',req:['suppressed','zero_sum','pattern'],opt:['simulation','hero','accel','memhazard'],desc:'I alone see truth. Reality is info warfare.',world:'Red-pill, sovereign citizens, preppers.',hook:'Epistemic exceptionalism + self-reliance'},
 ];
+var PRESETS={religion:['afterlife','sacred_text','ritual','d_punish','chosen','purity','martyrdom'],conspiracy:['hidden_hand','fake_events','pattern','us_them','suppressed','zero_sum'],tech:['singularity','simulation','memhazard','accel','hero','suppressed']};
+var TEMOJI={afterlife:'\u271D',sacred_text:'\uD83D\uDCD6',ritual:'\uD83D\uDD6F',d_punish:'\u26A1',chosen:'\u2B50',hidden_hand:'\uD83D\uDC41',fake_events:'\uD83C\uDFAD',pattern:'\uD83D\uDD2E',us_them:'\u2694',suppressed:'\uD83D\uDD12',golden_age:'\uD83D\uDC51',manifest:'\uD83D\uDDFA',class_enemy:'\u270A',vanguard:'\u2691',singularity:'\uD83E\uDD16',simulation:'\uD83D\uDCBB',memhazard:'\u2623',accel:'\uD83D\uDCA5',hero:'\uD83D\uDDE1',zero_sum:'\u2696',purity:'\uD83C\uDF3F',martyrdom:'\uD83E\uDE78'};
+var mById={};CATS.forEach(function(c){c.memes.forEach(function(m){mById[m.id]={...m,color:c.color}})});
 
-const PRESETS={
-  religion:  ['afterlife','sacred_text','ritual','d_punish','chosen','purity','martyrdom'],
-  conspiracy:['hidden_hand','fake_events','pattern','us_them','suppressed','zero_sum'],
-  tech:      ['singularity','simulation','memhazard','accel','hero','suppressed'],
-};
-const TEMOJI={
-  afterlife:'\u271D',sacred_text:'\uD83D\uDCD6',ritual:'\uD83D\uDD6F',d_punish:'\u26A1',chosen:'\u2B50',
-  hidden_hand:'\uD83D\uDC41',fake_events:'\uD83C\uDFAD',pattern:'\uD83D\uDD2E',us_them:'\u2694',suppressed:'\uD83D\uDD12',
-  golden_age:'\uD83D\uDC51',manifest:'\uD83D\uDDFA',class_enemy:'\u270A',vanguard:'\u2691',
-  singularity:'\uD83E\uDD16',simulation:'\uD83D\uDCBB',memhazard:'\u2623',accel:'\uD83D\uDCA5',
-  hero:'\uD83D\uDDE1',zero_sum:'\u2696',purity:'\uD83C\uDF3F',martyrdom:'\uD83E\uDE78',
-};
-const mById={};
-CATS.forEach(c=>c.memes.forEach(m=>{mById[m.id]={...m,color:c.color}}));
+var sel=new Set(),running=false,gen=0,mutN=0;
+var agents=[],conns=[],mplexes=[],animId,logLines=[];
+var N=55,canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+var sparkHistory=[],SPARK_MAX=80;
+var lastLogTime=0,LOG_COOLDOWN=1200;
+var toastQueue=[],toastBusy=false;
 
-// ─────────────────────────────────────
-// STATE
-// ─────────────────────────────────────
-let sel=new Set(), running=false, gen=0, mutN=0;
-let agents=[], conns=[], mplexes=[], animId, logLines=[];
-const N=55;
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d');
+function closeIntro(){document.getElementById('introModal').classList.add('hidden');try{localStorage.setItem('mplx_v4','1')}catch(e){}requestAnimationFrame(function(){resizeCvs();setTimeout(resizeCvs,250)})}
+(function(){try{if(localStorage.getItem('mplx_v4'))document.getElementById('introModal').classList.add('hidden')}catch(e){}})();
 
-// ─────────────────────────────────────
-// INTRO MODAL
-// ─────────────────────────────────────
-function closeIntro(){
-  document.getElementById('introModal').classList.add('hidden');
-  try{localStorage.setItem('mplx_v3','1')}catch(e){}
-  requestAnimationFrame(()=>{
-    resizeCvs();
-    // slight delay for layout settle
-    setTimeout(resizeCvs,200);
-  });
-}
-(function(){
-  try{
-    if(localStorage.getItem('mplx_v3')){
-      document.getElementById('introModal').classList.add('hidden');
-    }
-  }catch(e){}
-})();
+function goTab(id,btn){document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('on')});document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on')});document.getElementById(id).classList.add('on');if(btn)btn.classList.add('on');if(id==='pSim')requestAnimationFrame(function(){setTimeout(resizeCvs,50)})}
+document.getElementById('tabs').addEventListener('click',function(e){var tab=e.target.closest('.tab');if(tab&&tab.dataset.pnl)goTab(tab.dataset.pnl,tab)});
 
-// ─────────────────────────────────────
-// TABS
-// ─────────────────────────────────────
-function goTab(id,btn){
-  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  if(btn) btn.classList.add('on');
-  if(id==='pSim') requestAnimationFrame(()=>setTimeout(resizeCvs,50));
-}
+(function(){var row=document.getElementById('presetRow');[{key:'religion',label:'\u26EA Religion'},{key:'conspiracy',label:'\uD83D\uDC41 Conspiracy'},{key:'tech',label:'\u26A1 Tech-Gnosis'},{key:'all',label:'\uD83C\uDF10 All'},{key:'clear',label:'\u2715 Clear'}].forEach(function(p){var b=document.createElement('button');b.className='pbtn';b.textContent=p.label;b.addEventListener('click',function(){if(p.key==='clear'){sel.clear();renderLib();return}if(p.key==='all'){CATS.forEach(function(c){c.memes.forEach(function(m){sel.add(m.id)})});renderLib();return}(PRESETS[p.key]||[]).forEach(function(id){sel.add(id)});renderLib()});row.appendChild(b)})})();
 
-// Event delegation for tabs
-document.getElementById('tabs').addEventListener('click',function(e){
-  const tab=e.target.closest('.tab');
-  if(!tab) return;
-  const pnl=tab.dataset.pnl;
-  if(pnl) goTab(pnl,tab);
-});
+function renderLib(){var lib=document.getElementById('memeLib');lib.innerHTML='';CATS.forEach(function(cat){var lbl=document.createElement('div');lbl.className='cat-lbl';lbl.textContent=cat.emoji+' '+cat.name;lib.appendChild(lbl);cat.memes.forEach(function(m){var on=sel.has(m.id),d=document.createElement('div');d.className='chip'+(on?' on':'');d.innerHTML='<div class="chip-dot" style="background:'+cat.color+(on?';box-shadow:0 0 8px '+cat.color:'')+'"></div><div class="chip-body"><div class="chip-name">'+(on?'\u2713 ':'')+'<b>'+m.name+'</b></div><span class="chip-desc">'+m.desc+'</span></div><div class="chip-vs"><span style="color:'+cat.color+'">V:'+m.v+'</span><br>S:'+m.s+'</div>';d.addEventListener('click',function(){sel.has(m.id)?sel.delete(m.id):sel.add(m.id);renderLib();if(running)initAgents()});lib.appendChild(d)})});document.getElementById('mCnt').textContent=sel.size+(sel.size===1?' MEME':' MEMES');var hint=document.getElementById('hint');if(hint&&!running&&agents.length===0)hint.querySelector('.hint-txt').innerHTML=sel.size>0?'MEMES SELECTED \u2014 PRESS RUN':'SELECT MEMES \u2014 PRESS RUN'}
 
-// ─────────────────────────────────────
-// PRESETS
-// ─────────────────────────────────────
-(function buildPresets(){
-  const row=document.getElementById('presetRow');
-  const presets=[
-    {key:'religion',label:'\u26EA Religion'},
-    {key:'conspiracy',label:'\uD83D\uDC41 Conspiracy'},
-    {key:'tech',label:'\u26A1 Tech-Gnosis'},
-    {key:'all',label:'\uD83C\uDF10 All'},
-    {key:'clear',label:'\u2715 Clear'},
-  ];
-  presets.forEach(p=>{
-    const b=document.createElement('button');
-    b.className='pbtn';
-    b.textContent=p.label;
-    b.addEventListener('click',()=>{
-      if(p.key==='clear'){sel.clear();renderLib();return;}
-      if(p.key==='all'){CATS.forEach(c=>c.memes.forEach(m=>sel.add(m.id)));renderLib();return;}
-      (PRESETS[p.key]||[]).forEach(id=>sel.add(id));
-      renderLib();
-    });
-    row.appendChild(b);
-  });
-})();
+function initAgents(){var W=canvas.width,H=canvas.height;if(W===0||H===0)return;agents=[];for(var i=0;i<N;i++){var pool=[...sel],am=new Set();if(pool.length){var n=Math.min(pool.length,Math.floor(Math.random()*2)+1),sh=[...pool].sort(function(){return Math.random()-.5});for(var j=0;j<n;j++)am.add(sh[j])}agents.push({x:24+Math.random()*(W-48),y:24+Math.random()*(H-56),vx:(Math.random()-.5)*.8,vy:(Math.random()-.5)*.8,memes:am,mplex:null,sc:.82+Math.random()*.28,sus:.3+Math.random()*.7,ph:Math.random()*Math.PI*2,ws:.045+Math.random()*.035,hat:Math.random()<.12,glasses:Math.random()<.1,thought:null,tt:0,flash:0})}conns=[];gen=0;mutN=0;sparkHistory=[];updateStats()}
 
-// ─────────────────────────────────────
-// MEME LIBRARY
-// ─────────────────────────────────────
-function renderLib(){
-  const lib=document.getElementById('memeLib');
-  lib.innerHTML='';
-  CATS.forEach(cat=>{
-    const lbl=document.createElement('div');
-    lbl.className='cat-lbl';
-    lbl.textContent=cat.emoji+' '+cat.name;
-    lib.appendChild(lbl);
-    cat.memes.forEach(m=>{
-      const on=sel.has(m.id);
-      const d=document.createElement('div');
-      d.className='chip'+(on?' on':'');
-      d.innerHTML=
-        '<div class="chip-dot" style="background:'+cat.color+(on?';box-shadow:0 0 8px '+cat.color:'')+'"></div>'+
-        '<div class="chip-body"><div class="chip-name">'+(on?'\u2713 ':'')+'<b>'+m.name+'</b></div>'+
-        '<span class="chip-desc">'+m.desc+'</span></div>'+
-        '<div class="chip-vs"><span style="color:'+cat.color+'">V:'+m.v+'</span><br>S:'+m.s+'</div>';
-      d.addEventListener('click',()=>{
-        sel.has(m.id)?sel.delete(m.id):sel.add(m.id);
-        renderLib();
-        if(running) initAgents();
-      });
-      lib.appendChild(d);
-    });
-  });
-  document.getElementById('mCnt').textContent=sel.size+(sel.size===1?' MEME':' MEMES');
-  // Update hint based on selection
-  const hint=document.getElementById('hint');
-  if(hint && sel.size>0 && !running && agents.length===0){
-    hint.querySelector('.hint-txt').innerHTML='MEMES SELECTED \u2014 PRESS RUN';
-  } else if(hint && sel.size===0 && !running){
-    hint.querySelector('.hint-txt').innerHTML='SELECT MEMES \u2014 PRESS RUN';
-  }
-}
+function drawBg(){ctx.fillStyle='rgba(255,255,255,.012)';var sp=28,W=canvas.width,H=canvas.height;for(var gx=sp;gx<W;gx+=sp)for(var gy=sp;gy<H;gy+=sp){ctx.beginPath();ctx.arc(gx,gy,.5,0,Math.PI*2);ctx.fill()}}
 
-// ─────────────────────────────────────
-// AGENTS
-// ─────────────────────────────────────
-function initAgents(){
-  const W=canvas.width,H=canvas.height;
-  if(W===0||H===0) return; // canvas not ready
-  agents=[];
-  for(let i=0;i<N;i++){
-    const pool=[...sel];
-    const am=new Set();
-    if(pool.length){
-      const n=Math.min(pool.length,Math.floor(Math.random()*2)+1);
-      const shuffled=[...pool].sort(()=>Math.random()-.5);
-      for(let j=0;j<n;j++) am.add(shuffled[j]);
-    }
-    agents.push({
-      x:20+Math.random()*(W-40), y:20+Math.random()*(H-50),
-      vx:(Math.random()-.5)*.9, vy:(Math.random()-.5)*.9,
-      memes:am, mplex:null,
-      sc:.82+Math.random()*.32,
-      sus:.3+Math.random()*.7,
-      ph:Math.random()*Math.PI*2,
-      ws:.055+Math.random()*.04,
-      hat:Math.random()<.14,
-      glasses:Math.random()<.11,
-      thought:null, tt:0, flash:0,
-    });
-  }
-  conns=[];gen=0;mutN=0;
-  updateStats();
-}
+function drawPerson(a,bc,gc){var x=a.x,y=a.y,sc=a.sc,ph=a.ph,sw=Math.sin(ph)*1.4;ctx.save();if(gc){var grd=ctx.createRadialGradient(x,y,4*sc,x,y,14*sc);grd.addColorStop(0,gc+'18');grd.addColorStop(1,gc+'00');ctx.fillStyle=grd;ctx.beginPath();ctx.arc(x,y,14*sc,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x,y+1,11*sc,0,Math.PI*2);ctx.strokeStyle=gc+'35';ctx.lineWidth=1.5*sc;ctx.stroke()}ctx.beginPath();ctx.arc(x,y-9*sc,4.4*sc,0,Math.PI*2);ctx.fillStyle=bc;ctx.fill();ctx.strokeStyle=bc;ctx.lineWidth=2.4*sc;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y-4.5*sc);ctx.lineTo(x,y+3.5*sc);ctx.stroke();var aw=Math.sin(ph*1.2)*2;ctx.lineWidth=1.8*sc;ctx.beginPath();ctx.moveTo(x-4.5*sc,y-sc+aw);ctx.lineTo(x,y+.5*sc);ctx.lineTo(x+4.5*sc,y-sc-aw);ctx.stroke();ctx.beginPath();ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x-3*sc,y+9*sc+sw);ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x+3*sc,y+9*sc-sw);ctx.stroke();ctx.fillStyle=a.mplex?'rgba(255,255,255,.85)':'rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(x-1.8*sc,y-9.5*sc,.85*sc,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x+1.8*sc,y-9.5*sc,.85*sc,0,Math.PI*2);ctx.fill();if(a.hat){ctx.fillStyle=bc;ctx.fillRect(x-5*sc,y-14.5*sc,10*sc,2*sc);ctx.fillRect(x-3*sc,y-19*sc,6*sc,5*sc)}if(a.glasses){ctx.strokeStyle='rgba(200,200,220,.45)';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(x-2*sc,y-9.5*sc,1.5*sc,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(x+2*sc,y-9.5*sc,1.5*sc,0,Math.PI*2);ctx.stroke()}if(a.flash>0){var fr=a.flash/6;var fg=ctx.createRadialGradient(x,y-2*sc,0,x,y-2*sc,16*sc*fr);fg.addColorStop(0,'rgba(255,255,255,'+(fr*.25)+')');fg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(x,y-2*sc,16*sc*fr,0,Math.PI*2);ctx.fill()}if(a.thought&&a.tt>0){var al=Math.min(1,a.tt/12);ctx.save();ctx.globalAlpha=al*.7;for(var i=0;i<2;i++){ctx.beginPath();ctx.arc(x+2+i*3,y-15*sc-i*3,1.1-i*.3,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.25)';ctx.fill()}ctx.font='10px sans-serif';var tw=ctx.measureText(a.thought).width;var bx=x-tw/2+3,by=y-26*sc-9,bw=tw+10,bh=15;ctx.fillStyle='rgba(8,8,15,.85)';ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=.6;var rad=3;ctx.beginPath();ctx.moveTo(bx+rad,by);ctx.lineTo(bx+bw-rad,by);ctx.arcTo(bx+bw,by,bx+bw,by+rad,rad);ctx.lineTo(bx+bw,by+bh-rad);ctx.arcTo(bx+bw,by+bh,bx+bw-rad,by+bh,rad);ctx.lineTo(bx+rad,by+bh);ctx.arcTo(bx,by+bh,bx,by+bh-rad,rad);ctx.lineTo(bx,by+rad);ctx.arcTo(bx,by,bx+rad,by,rad);ctx.fill();ctx.stroke();ctx.fillStyle='rgba(255,255,255,.75)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(a.thought,bx+bw/2,by+bh/2);ctx.restore()}ctx.restore()}
 
-// ─────────────────────────────────────
-// DRAW
-// ─────────────────────────────────────
-function drawPerson(a,bc,gc){
-  const{x,y,sc,ph,hat,glasses,thought,tt,flash}=a;
-  const sw=Math.sin(ph)*1.6;
-  ctx.save();
-  if(gc){
-    ctx.beginPath();ctx.arc(x,y+2,12*sc,0,Math.PI*2);
-    ctx.strokeStyle=gc+'50';ctx.lineWidth=2.8*sc;ctx.stroke();
-  }
-  // head
-  ctx.beginPath();ctx.arc(x,y-9*sc,4.6*sc,0,Math.PI*2);
-  ctx.fillStyle=bc;ctx.fill();
-  ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=.7;ctx.stroke();
-  // body
-  ctx.strokeStyle=bc;ctx.lineWidth=2.6*sc;ctx.lineCap='round';
-  ctx.beginPath();ctx.moveTo(x,y-4.5*sc);ctx.lineTo(x,y+3.5*sc);ctx.stroke();
-  // arms
-  const aw=Math.sin(ph*1.2)*2.2;
-  ctx.lineWidth=2*sc;
-  ctx.beginPath();ctx.moveTo(x-4.5*sc,y-sc+aw);ctx.lineTo(x,y+.5*sc);ctx.lineTo(x+4.5*sc,y-sc-aw);ctx.stroke();
-  // legs
-  ctx.beginPath();
-  ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x-3.2*sc,y+9.5*sc+sw);
-  ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x+3.2*sc,y+9.5*sc-sw);
-  ctx.stroke();
-  // eyes
-  ctx.fillStyle=a.mplex?'rgba(255,255,255,.9)':'rgba(0,0,0,.6)';
-  ctx.beginPath();ctx.arc(x-1.9*sc,y-9.6*sc,.95*sc,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.arc(x+1.9*sc,y-9.6*sc,.95*sc,0,Math.PI*2);ctx.fill();
-  // hat
-  if(hat){ctx.fillStyle=bc;ctx.fillRect(x-5.5*sc,y-15*sc,11*sc,2.2*sc);ctx.fillRect(x-3.2*sc,y-20*sc,6.4*sc,5.5*sc);}
-  // glasses
-  if(glasses){
-    ctx.strokeStyle='rgba(200,200,220,.6)';ctx.lineWidth=.8;
-    ctx.beginPath();ctx.arc(x-2.1*sc,y-9.6*sc,1.7*sc,0,Math.PI*2);ctx.stroke();
-    ctx.beginPath();ctx.arc(x+2.1*sc,y-9.6*sc,1.7*sc,0,Math.PI*2);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(x-.4*sc,y-9.6*sc);ctx.lineTo(x+.4*sc,y-9.6*sc);ctx.stroke();
-  }
-  // flash
-  if(flash>0){
-    ctx.beginPath();ctx.arc(x,y-3*sc,17*sc*(flash/8),0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,255,255,'+(flash/8*.5)+')';ctx.lineWidth=1.4;ctx.stroke();
-  }
-  // thought bubble
-  if(thought&&tt>0){
-    const al=Math.min(1,tt/18);
-    ctx.save();ctx.globalAlpha=al;
-    for(let i=0;i<3;i++){const r=1.5-i*.3;ctx.beginPath();ctx.arc(x+3+i*3.5,y-16*sc-i*3,r,0,Math.PI*2);ctx.fillStyle=bc+'cc';ctx.fill();}
-    ctx.font='11px sans-serif';
-    const tw=ctx.measureText(thought).width;
-    const bx=x-tw/2+5,by=y-30*sc-12,bw=tw+12,bh=18;
-    ctx.fillStyle='rgba(7,7,15,.9)';ctx.strokeStyle=bc+'bb';ctx.lineWidth=1;
-    ctx.beginPath();ctx.rect(bx,by,bw,bh);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(thought,bx+bw/2,by+bh/2);
-    ctx.restore();
-  }
-  ctx.restore();
-}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);drawBg();ctx.lineCap='round';ctx.setLineDash([]);conns.forEach(function(c){if(!c.sh)return;var fade=Math.max(0,.15-c.dist/600)*(1-c.dist/c.range);ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);ctx.strokeStyle='rgba(255,255,255,'+(fade*2.2)+')';ctx.lineWidth=1;ctx.stroke()});ctx.setLineDash([2,5]);conns.forEach(function(c){if(c.sh)return;var fade=Math.max(0,.12-c.dist/600)*(1-c.dist/c.range);ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);ctx.strokeStyle='rgba(140,140,170,'+(fade*1.2)+')';ctx.lineWidth=.4;ctx.stroke()});ctx.setLineDash([]);var sorted=[...agents].sort(function(a,b){return a.y-b.y});sorted.forEach(function(a){var pm=a.memes.size?mById[[...a.memes][0]]:null;var bc=pm?pm.color:'#4a4a58';var mpd=a.mplex?MPLEXES.find(function(d){return d.id===a.mplex}):null;drawPerson(a,bc,mpd?mpd.color:null)})}
 
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  // connections
-  conns.forEach(c=>{
-    const fade=Math.max(0,.18-c.dist/530)*(1-c.dist/c.range);
-    ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);
-    if(c.sh){
-      ctx.strokeStyle='rgba(255,255,255,'+fade*2.5+')';ctx.lineWidth=1.2;ctx.setLineDash([]);
-    } else {
-      ctx.strokeStyle='rgba(180,180,210,'+fade*1.5+')';ctx.lineWidth=.5;ctx.setLineDash([3,4]);
-    }
-    ctx.stroke();ctx.setLineDash([]);
-  });
-  // agents depth-sorted
-  var sorted=[...agents];
-  sorted.sort(function(a,b){return a.y-b.y});
-  sorted.forEach(function(a){
-    var pm=a.memes.size?mById[[...a.memes][0]]:null;
-    var bc=pm?pm.color:'#5a5a78';
-    var mpd=a.mplex?MPLEXES.find(function(d){return d.id===a.mplex}):null;
-    drawPerson(a,bc,mpd?mpd.color:null);
-  });
-}
+var sparkCvs=document.getElementById('sparkCanvas'),sparkCtx=sparkCvs.getContext('2d');
+function drawSpark(){var w=sparkCvs.parentElement.clientWidth;sparkCvs.width=w;sparkCvs.height=38;if(!sparkHistory.length)return;var h=38,len=sparkHistory.length,step=w/SPARK_MAX;sparkCtx.clearRect(0,0,w,h);sparkCtx.beginPath();sparkCtx.moveTo(0,h-(sparkHistory[0].inf/100)*h);for(var i=1;i<len;i++)sparkCtx.lineTo(i*step,h-(sparkHistory[i].inf/100)*h);sparkCtx.strokeStyle='rgba(255,255,255,.25)';sparkCtx.lineWidth=1;sparkCtx.stroke();sparkCtx.lineTo((len-1)*step,h);sparkCtx.lineTo(0,h);sparkCtx.closePath();sparkCtx.fillStyle='rgba(255,255,255,.03)';sparkCtx.fill();for(var i=0;i<len;i++){if(sparkHistory[i].mx>0){sparkCtx.beginPath();sparkCtx.arc(i*step,h-4,1.5,0,Math.PI*2);sparkCtx.fillStyle='rgba(255,255,255,.35)';sparkCtx.fill()}}}
 
-// ─────────────────────────────────────
-// SIMULATION
-// ─────────────────────────────────────
-function step(){
-  const spd=parseInt(document.getElementById('spd').value);
-  for(let s=0;s<spd;s++){
-    gen++;
-    move();spread();evalMx();
-    if(gen%18===0) decay();
-    if(gen%46===0) mutate();
-  }
-  agents.forEach(a=>{a.ph+=a.ws;if(a.tt>0)a.tt--;if(a.flash>0)a.flash--;});
-  updateStats();
-  document.getElementById('genBadge').textContent='GEN '+gen;
-}
+function step(){var spd=parseInt(document.getElementById('spd').value);for(var s=0;s<spd;s++){gen++;move();spread();evalMx();if(gen%20===0)decay();if(gen%50===0)mutate()}agents.forEach(function(a){a.ph+=a.ws;if(a.tt>0)a.tt--;if(a.flash>0)a.flash-=.4});if(gen%3===0){var tot=agents.reduce(function(s,a){return s+a.memes.size},0);var max=agents.length*Math.max(1,sel.size);sparkHistory.push({inf:max>0?Math.round(tot/max*100):0,mx:mplexes.length});if(sparkHistory.length>SPARK_MAX)sparkHistory.shift()}updateStats();document.getElementById('genBadge').textContent='GEN '+gen}
 
-function move(){
-  const W=canvas.width,H=canvas.height;
-  agents.forEach(a=>{
-    a.x+=a.vx;a.y+=a.vy;
-    if(a.x<14||a.x>W-14)a.vx*=-1;
-    if(a.y<14||a.y>H-24)a.vy*=-1;
-    a.vx+=(Math.random()-.5)*.06;a.vy+=(Math.random()-.5)*.06;
-    a.vx=Math.max(-1.4,Math.min(1.4,a.vx));a.vy=Math.max(-1.4,Math.min(1.4,a.vy));
-  });
-}
+function move(){var W=canvas.width,H=canvas.height;agents.forEach(function(a){a.x+=a.vx;a.y+=a.vy;if(a.x<16||a.x>W-16)a.vx*=-1;if(a.y<16||a.y>H-26)a.vy*=-1;a.vx+=(Math.random()-.5)*.05;a.vy+=(Math.random()-.5)*.05;a.vx=Math.max(-1.2,Math.min(1.2,a.vx));a.vy=Math.max(-1.2,Math.min(1.2,a.vy))})}
 
-function spread(){
-  if(!sel.size)return;
-  conns=[];
-  for(let i=0;i<agents.length;i++){
-    for(let j=i+1;j<agents.length;j++){
-      const a=agents[i],b=agents[j];
-      const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
-      const range=64+(a.memes.size+b.memes.size)*3.5;
-      if(dist<range){
-        const sh=[...a.memes].filter(id=>b.memes.has(id));
-        conns.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,sh:sh.length,dist,range});
-        tx(a,b,dist,range);tx(b,a,dist,range);
-      }
-    }
-  }
-}
+function spread(){if(!sel.size)return;conns=[];for(var i=0;i<agents.length;i++)for(var j=i+1;j<agents.length;j++){var a=agents[i],b=agents[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy),range=60+(a.memes.size+b.memes.size)*3;if(dist<range){var sh=[...a.memes].filter(function(id){return b.memes.has(id)});conns.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,sh:sh.length,dist:dist,range:range});tx(a,b,dist,range);tx(b,a,dist,range)}}}
 
-function tx(src,tgt,dist,range){
-  let hit=false;
-  src.memes.forEach(id=>{
-    if(!tgt.memes.has(id)&&sel.has(id)){
-      const m=mById[id];if(!m)return;
-      if(Math.random()<(m.v/10)*tgt.sus*(1-dist/range)*.28){
-        tgt.memes.add(id);hit=true;
-        if(src.tt<=0){src.thought=TEMOJI[id]||'\uD83D\uDCAD';src.tt=26;}
-      }
-    }
-  });
-  if(hit)tgt.flash=Math.min(8,tgt.flash+3);
-}
+function tx(src,tgt,dist,range){var hit=false;src.memes.forEach(function(id){if(!tgt.memes.has(id)&&sel.has(id)){var m=mById[id];if(!m)return;if(Math.random()<(m.v/10)*tgt.sus*(1-dist/range)*.22){tgt.memes.add(id);hit=true;if(src.tt<=0){src.thought=TEMOJI[id]||'\uD83D\uDCAD';src.tt=18}}}});if(hit)tgt.flash=Math.min(5,tgt.flash+1.5)}
 
-function decay(){
-  agents.forEach(a=>a.memes.forEach(id=>{
-    if(!sel.has(id)){a.memes.delete(id);return;}
-    const m=mById[id];
-    if(m&&Math.random()<(1-m.s/10)*.05)a.memes.delete(id);
-  }));
-}
+function decay(){agents.forEach(function(a){a.memes.forEach(function(id){if(!sel.has(id)){a.memes.delete(id);return}var m=mById[id];if(m&&Math.random()<(1-m.s/10)*.04)a.memes.delete(id)})})}
 
-function mutate(){
-  if(Math.random()<.3&&sel.size){
-    const pool=[...sel];
-    const tgt=agents[Math.floor(Math.random()*agents.length)];
-    const id=pool[Math.floor(Math.random()*pool.length)];
-    if(!tgt.memes.has(id)){
-      tgt.memes.add(id);mutN++;tgt.flash=7;
-      addLog('Spontaneous: <span>'+(mById[id]?mById[id].name:id)+'</span>','w');
-    }
-  }
-}
+function mutate(){if(Math.random()<.2&&sel.size){var pool=[...sel],tgt=agents[Math.floor(Math.random()*agents.length)],id=pool[Math.floor(Math.random()*pool.length)];if(!tgt.memes.has(id)){tgt.memes.add(id);mutN++;tgt.flash=4;addLog('Mutation: <span>'+(mById[id]?mById[id].name:id)+'</span>','')}}}
 
-function evalMx(){
-  mplexes=[];
-  MPLEXES.forEach(def=>{
-    if(def.req.filter(id=>sel.has(id)).length<Math.ceil(def.req.length*.7))return;
-    let h=0;
-    agents.forEach(a=>{if(def.req.every(id=>a.memes.has(id)))h++;});
-    const str=h/agents.length;
-    if(str>.01||h>2)mplexes.push({...def,str,h});
-  });
-  mplexes.sort((a,b)=>b.str-a.str);
-  agents.forEach(a=>{
-    a.mplex=null;
-    for(const d of mplexes){
-      if(d.req.every(id=>a.memes.has(id))){a.mplex=d.id;break;}
-    }
-  });
-  mplexes.forEach(mp=>{
-    if(mp.str>.3&&mp._l!=='m'){
-      mp._l='m';
-      addLog('<span>'+mp.name+'</span> \u2014 critical mass','c');
-      showToast('CRITICAL MASS \u2014 '+mp.name);
-    }
-    if(mp.str>.5&&mp._l!=='d'){
-      mp._l='d';
-      addLog('<span>'+mp.name+'</span> \u2014 DOMINANCE','c');
-      showToast('DOMINANCE \u2014 '+mp.name);
-    }
-  });
-}
+function evalMx(){mplexes=[];MPLEXES.forEach(function(def){if(def.req.filter(function(id){return sel.has(id)}).length<Math.ceil(def.req.length*.7))return;var h=0;agents.forEach(function(a){if(def.req.every(function(id){return a.memes.has(id)}))h++});var str=h/agents.length;if(str>.01||h>2)mplexes.push({...def,str:str,h:h})});mplexes.sort(function(a,b){return b.str-a.str});agents.forEach(function(a){a.mplex=null;for(var k=0;k<mplexes.length;k++)if(mplexes[k].req.every(function(id){return a.memes.has(id)})){a.mplex=mplexes[k].id;break}});mplexes.forEach(function(mp){if(mp.str>.3&&mp._l!=='m'){mp._l='m';addLog('<span>'+mp.name+'</span> \u2014 critical mass','milestone');queueToast('CRITICAL MASS \u2014 '+mp.name)}if(mp.str>.5&&mp._l!=='d'){mp._l='d';addLog('<span>'+mp.name+'</span> \u2014 DOMINANCE','milestone');queueToast('DOMINANCE \u2014 '+mp.name)}})}
 
-// ─────────────────────────────────────
-// UI
-// ─────────────────────────────────────
-function showToast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2800);
-}
+function queueToast(msg){toastQueue.push(msg);if(!toastBusy)drainToast()}
+function drainToast(){if(!toastQueue.length){toastBusy=false;return}toastBusy=true;var el=document.getElementById('toast');el.textContent=toastQueue.shift();el.classList.add('show');setTimeout(function(){el.classList.remove('show');setTimeout(drainToast,400)},2200)}
 
-function updateStats(){
-  document.getElementById('sA').textContent=agents.length;
-  document.getElementById('sM').textContent=mplexes.length;
-  document.getElementById('sMu').textContent=mutN;
-  const tot=agents.reduce((s,a)=>s+a.memes.size,0);
-  const max=agents.length*Math.max(1,sel.size);
-  document.getElementById('sR').textContent=max>0?Math.round(tot/max*100)+'%':'0%';
-  document.getElementById('sDom').textContent=mplexes[0]?mplexes[0].name:'\u2014';
-  const ml=document.getElementById('mxList');
-  if(!mplexes.length){
-    ml.innerHTML='<div style="color:#555;font-size:.62rem;text-align:center;padding:8px 0;line-height:1.9">No memeplexes formed yet.<br><span style="color:#fff">Run the simulation to watch ideas cluster.</span></div>';
-    return;
-  }
-  const maxS=Math.max.apply(null,mplexes.map(function(m){return m.str}));
-  ml.innerHTML='';
-  mplexes.forEach(function(mp,i){
-    const pct=Math.round(mp.str*100),bw=maxS>0?(mp.str/maxS)*100:0;
-    const tags=[].concat(mp.req,mp.opt||[]).filter(function(id){
-      return sel.has(id)&&agents.some(function(a){return a.memes.has(id)});
-    }).map(function(id){return mById[id]?mById[id].name:id}).slice(0,4);
-    const d=document.createElement('div');
-    d.className='mx-item'+(i===0?' dom':'');
-    d.innerHTML='<div class="mx-name" style="color:'+mp.color+'">'+(i===0?'\u25C6 ':'')+mp.name+'</div>'+
-      '<div class="mx-track"><div class="mx-bar" style="width:'+bw+'%;background:'+mp.color+'"></div></div>'+
-      '<div class="mx-row"><span>\uD83D\uDC65 '+mp.h+' ('+pct+'%)</span><span>'+(i===0?'DOMINANT':'#'+(i+1))+'</span></div>'+
-      '<div class="mx-desc">'+mp.desc+'</div>'+
-      '<div class="mx-tags">'+tags.map(function(n){return '<span class="mx-tag" style="background:'+mp.color+'22;color:'+mp.color+'">'+n+'</span>'}).join('')+'</div>';
-    ml.appendChild(d);
-  });
-}
+var statsThrottle=0;
+function updateStats(){var now=performance.now();if(now-statsThrottle<200)return;statsThrottle=now;var tot=agents.reduce(function(s,a){return s+a.memes.size},0),max=agents.length*Math.max(1,sel.size),infPct=max>0?Math.round(tot/max*100):0;document.getElementById('sA').textContent=agents.length;document.getElementById('sM').textContent=mplexes.length;document.getElementById('sMu').textContent=mutN;document.getElementById('sR').textContent=infPct+'%';document.getElementById('sDom').textContent=mplexes[0]?mplexes[0].name:'\u2014';var hud=document.getElementById('simHud');if(running&&!hud.classList.contains('on'))hud.classList.add('on');if(!running&&hud.classList.contains('on'))hud.classList.remove('on');document.getElementById('hudInf').textContent=infPct+'%';document.getElementById('hudMx').textContent=mplexes.length;document.getElementById('hudDom').innerHTML=mplexes[0]?'DOM <span>'+mplexes[0].name+'</span>':'';var ml=document.getElementById('mxList');if(!mplexes.length){ml.innerHTML='<div style="color:#444;font-size:.58rem;text-align:center;padding:10px 0;line-height:2">No memeplexes formed yet.<br><span style="color:#999">Run the simulation to watch ideas cluster.</span></div>'}else{var maxS=Math.max.apply(null,mplexes.map(function(m){return m.str}));ml.innerHTML='';mplexes.forEach(function(mp,i){var pct=Math.round(mp.str*100),bw=maxS>0?(mp.str/maxS)*100:0;var tags=[].concat(mp.req,mp.opt||[]).filter(function(id){return sel.has(id)&&agents.some(function(a){return a.memes.has(id)})}).map(function(id){return mById[id]?mById[id].name:id}).slice(0,4);var d=document.createElement('div');d.className='mx-item'+(i===0?' dom':'');d.innerHTML='<div class="mx-name" style="color:'+mp.color+'">'+(i===0?'\u25C6 ':'')+mp.name+'</div><div class="mx-track"><div class="mx-bar" style="width:'+bw+'%;background:'+mp.color+'"></div></div><div class="mx-row"><span>'+mp.h+' agents ('+pct+'%)</span><span>'+(i===0?'DOMINANT':'#'+(i+1))+'</span></div><div class="mx-desc">'+mp.desc+'</div><div class="mx-tags">'+tags.map(function(n){return'<span class="mx-tag" style="background:'+mp.color+'18;color:'+mp.color+'">'+n+'</span>'}).join('')+'</div>';ml.appendChild(d)})}drawSpark()}
 
-function addLog(msg,type){
-  type=type||'';
-  const el=document.createElement('div');el.className='ll '+type;
-  el.innerHTML='['+String(gen).padStart(5,'0')+'] '+msg;
-  const b=document.getElementById('logbox');b.insertBefore(el,b.firstChild);
-  logLines.push(el);if(logLines.length>80)logLines.shift().remove();
-}
+function addLog(msg,type){type=type||'';var now=performance.now();if(type==='milestone'){_pushLog(msg,type);lastLogTime=now;return}if(now-lastLogTime<LOG_COOLDOWN)return;lastLogTime=now;_pushLog(msg,type)}
+function _pushLog(msg,type){var el=document.createElement('div');el.className='ll '+type;el.innerHTML='['+String(gen).padStart(5,'0')+'] '+msg;var b=document.getElementById('logbox');b.insertBefore(el,b.firstChild);logLines.push(el);while(logLines.length>30)logLines.shift().remove()}
 
-// Button event listeners (no inline onclick)
 document.getElementById('btnRun').addEventListener('click',toggleSim);
 document.getElementById('btnRst').addEventListener('click',resetSim);
 
-function toggleSim(){
-  if(!sel.size){
-    showToast('SELECT MEMES FIRST');
-    // Switch to memes tab on mobile
-    var memesTab=document.querySelector('[data-pnl="pMemes"]');
-    if(memesTab&&window.innerWidth<900) goTab('pMemes',memesTab);
-    return;
-  }
-  running=!running;
-  const btn=document.getElementById('btnRun');
-  if(running){
-    if(!agents.length) initAgents();
-    document.getElementById('hint').style.display='none';
-    btn.textContent='\u23F8 PAUSE';btn.classList.add('on');
-    addLog('Started \u2014 <span>'+sel.size+' memes</span> seeded');
-    loop();
-  } else {
-    btn.textContent='\u25B6 RUN';btn.classList.remove('on');
-    cancelAnimationFrame(animId);
-  }
-}
+function toggleSim(){if(!sel.size){queueToast('SELECT MEMES FIRST');var mt=document.querySelector('[data-pnl="pMemes"]');if(mt&&window.innerWidth<900)goTab('pMemes',mt);return}running=!running;var btn=document.getElementById('btnRun');if(running){if(!agents.length)initAgents();document.getElementById('hint').style.display='none';btn.textContent='\u23F8 PAUSE';btn.classList.add('on');addLog('Simulation started \u2014 <span>'+sel.size+' memes seeded</span>','milestone');loop()}else{btn.textContent='\u25B6 RUN';btn.classList.remove('on');cancelAnimationFrame(animId)}}
 
-function resetSim(){
-  running=false;cancelAnimationFrame(animId);
-  agents=[];conns=[];gen=0;mutN=0;mplexes=[];
-  MPLEXES.forEach(function(d){d._l=null;});
-  const btn=document.getElementById('btnRun');
-  btn.textContent='\u25B6 RUN';btn.classList.remove('on');
-  document.getElementById('hint').style.display='flex';
-  document.getElementById('genBadge').textContent='GEN 0';
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  updateStats();
-  document.getElementById('logbox').innerHTML='';logLines=[];
-  addLog('Reset \u2014 <span>select memes and run</span>');
-  renderLib(); // refresh hint text
-}
+function resetSim(){running=false;cancelAnimationFrame(animId);agents=[];conns=[];gen=0;mutN=0;mplexes=[];sparkHistory=[];MPLEXES.forEach(function(d){d._l=null});document.getElementById('btnRun').textContent='\u25B6 RUN';document.getElementById('btnRun').classList.remove('on');document.getElementById('hint').style.display='flex';document.getElementById('simHud').classList.remove('on');document.getElementById('genBadge').textContent='GEN 0';ctx.clearRect(0,0,canvas.width,canvas.height);updateStats();document.getElementById('logbox').innerHTML='';logLines=[];renderLib()}
 
-function loop(){if(!running)return;step();draw();animId=requestAnimationFrame(loop);}
+function loop(){if(!running)return;step();draw();animId=requestAnimationFrame(loop)}
+function resizeCvs(){var w=document.getElementById('canvas-wrap');if(!w)return;var cw=w.clientWidth,ch=w.clientHeight;if(cw>0&&ch>0){canvas.width=cw;canvas.height=ch}if(!running&&agents.length)draw()}
+var resizeTimer;window.addEventListener('resize',function(){clearTimeout(resizeTimer);resizeTimer=setTimeout(resizeCvs,80)});
 
-function resizeCvs(){
-  const w=document.getElementById('canvas-wrap');
-  if(!w) return;
-  const cw=w.clientWidth,ch=w.clientHeight;
-  if(cw>0&&ch>0){
-    canvas.width=cw;canvas.height=ch;
-  }
-  if(!running&&agents.length)draw();
-}
+(function(){var el=document.getElementById('encyclopedia');MPLEXES.forEach(function(mp){var all=[].concat(mp.req,mp.opt||[]);var d=document.createElement('div');d.className='acc';d.innerHTML='<div class="acc-hd"><div style="width:8px;height:8px;border-radius:50%;background:'+mp.color+';flex-shrink:0"></div><div class="acc-nm" style="color:'+mp.color+'">'+mp.name+'</div><div class="acc-ar">\u25BC</div></div><div class="acc-bd"><p>'+mp.desc+'</p><p><strong>Real-world:</strong> '+mp.world+'</p><p><strong>Core hook:</strong> '+mp.hook+'</p><div class="acc-tags">'+all.map(function(id){var m=mById[id],r=mp.req.indexOf(id)!==-1;return m?'<span class="acc-tag" style="background:'+mp.color+(r?'25':'12')+';color:'+mp.color+';border:1px solid '+mp.color+(r?'40':'18')+'">'+(r?'\u2605 ':'')+m.name+'</span>':''}).join('')+'</div><div class="acc-note">\u2605 = required memes</div></div>';el.appendChild(d)});el.addEventListener('click',function(e){var hd=e.target.closest('.acc-hd');if(!hd)return;hd.nextElementSibling.classList.toggle('open');hd.querySelector('.acc-ar').classList.toggle('open')})})();
 
-let resizeTimer;
-window.addEventListener('resize',function(){
-  clearTimeout(resizeTimer);
-  resizeTimer=setTimeout(resizeCvs,80);
-});
+(function(){var FACTS=['MEMETICS: Self-replicating cultural units \u2014 Dawkins, The Selfish Gene (1976)','MEMEPLEX: Mutually-reinforcing meme clusters spreading as coherent units','VIRALITY: Fear-based memes spread fastest \u2014 amygdala hijack before critical thinking','STICKINESS: Unfalsifiable beliefs score 10/10 \u2014 evidence-resistance is survival','CCRU: Hyperstition \u2014 fictions that make themselves real through belief','BLACKMORE: The self is a memeplex, not a container that memes fill','SELECTION: Memes compete for cognitive bandwidth \u2014 attention is scarce','MUTATION: Every retelling drifts \u2014 heresies sometimes outcompete the parent','DENNETT: Religions are wild memes hijacking cognitive architecture','LAND: Accelerationism \u2014 a meme designed to make capitalism eat itself'];var el=document.getElementById('tickInner');var d=[...FACTS,...FACTS];el.innerHTML=d.map(function(t){var c=t.indexOf(':');return c>-1?'<em>'+t.slice(0,c+1)+'</em>'+t.slice(c+1):t}).join('&nbsp;&nbsp; /// &nbsp;&nbsp;')})();
 
-// ─────────────────────────────────────
-// ENCYCLOPEDIA
-// ─────────────────────────────────────
-function buildEnc(){
-  const el=document.getElementById('encyclopedia');
-  MPLEXES.forEach(mp=>{
-    const all=[].concat(mp.req,mp.opt||[]);
-    const d=document.createElement('div');d.className='acc';
-    d.innerHTML='<div class="acc-hd">'+
-      '<div style="width:9px;height:9px;border-radius:50%;background:'+mp.color+';flex-shrink:0"></div>'+
-      '<div class="acc-nm" style="color:'+mp.color+'">'+mp.name+'</div>'+
-      '<div class="acc-ar">\u25BC</div></div>'+
-      '<div class="acc-bd">'+
-      '<p>'+mp.desc+'</p><p><strong>Real-world:</strong> '+mp.world+'</p>'+
-      '<p><strong>Core hook:</strong> '+mp.hook+'</p>'+
-      '<div class="acc-tags">'+all.map(function(id){
-        var m=mById[id],r=mp.req.indexOf(id)!==-1;
-        return m?'<span class="acc-tag" style="background:'+mp.color+(r?'30':'18')+';color:'+mp.color+';border:1px solid '+mp.color+(r?'55':'22')+'">'+(r?'\u2605 ':'')+m.name+'</span>':'';
-      }).join('')+'</div>'+
-      '<div class="acc-note">\u2605 = required memes</div></div>';
-    el.appendChild(d);
-  });
-  // Event delegation for accordions
-  el.addEventListener('click',function(e){
-    var hd=e.target.closest('.acc-hd');
-    if(!hd) return;
-    hd.nextElementSibling.classList.toggle('open');
-    hd.querySelector('.acc-ar').classList.toggle('open');
-  });
-}
-
-// ─────────────────────────────────────
-// TICKER
-// ─────────────────────────────────────
-const FACTS=[
-  'MEMETICS: Self-replicating cultural units \u2014 Dawkins, The Selfish Gene (1976)',
-  'MEMEPLEX: Mutually-reinforcing meme clusters that spread as coherent ideational units',
-  'VIRALITY: Fear-based memes spread fastest \u2014 amygdala hijack before critical thinking engages',
-  'STICKINESS: Unfalsifiable beliefs score 10/10 \u2014 evidence-resistance is the survival mechanism',
-  'CCRU: Hyperstition \u2014 fictions that make themselves real through collective belief and action',
-  'BLACKMORE: The self is a memeplex, not a container that memes fill',
-  'SELECTION: Memes compete for cognitive bandwidth \u2014 attention is the scarce resource',
-  'MUTATION: Every retelling drifts \u2014 heresies are mutations that sometimes outcompete the parent',
-  'DENNETT: Religions are wild memes that evolved to hijack human cognitive architecture',
-  'LAND: Accelerationism \u2014 a meme designed to make capitalism eat itself by feeding it speed',
-];
-function buildTicker(){
-  const el=document.getElementById('tickInner');
-  const d=[...FACTS,...FACTS];
-  el.innerHTML=d.map(function(t){
-    var c=t.indexOf(':');
-    return c>-1?'<em>'+t.slice(0,c+1)+'</em>'+t.slice(c+1):t;
-  }).join('&nbsp;&nbsp; /// &nbsp;&nbsp;');
-}
-
-// ─────────────────────────────────────
-// INIT
-// ─────────────────────────────────────
-renderLib();
-buildEnc();
-buildTicker();
-
-// Pre-select a few memes for first-time demo readiness
 ['afterlife','us_them','hidden_hand','pattern','hero'].forEach(function(id){sel.add(id)});
 renderLib();
-
-// Ensure canvas sizes after DOM settles
-requestAnimationFrame(function(){
-  resizeCvs();
-  setTimeout(resizeCvs,300);
-});
-
-addLog('Initialized \u2014 <span>select memes to begin</span>');
-addLog('Tip: use presets for instant memeplex formation \uD83E\uDDEC');
+requestAnimationFrame(function(){resizeCvs();setTimeout(resizeCvs,300)});
 </script>
 </body>
 </html>
