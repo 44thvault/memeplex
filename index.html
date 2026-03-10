@@ -494,33 +494,33 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050508;color:#e8e8e
 
 <script>
 var CATS=[
-  {name:'RELIGIOUS',color:'#d4d4d8',emoji:'\u26EA',memes:[
+  {name:'RELIGIOUS',color:'#e8b84b',hsl:[42,78,60],emoji:'\u26EA',memes:[
     {id:'afterlife',name:'Afterlife Reward',desc:'Defeats death anxiety. Extremely sticky.',v:9,s:9,r:'existential'},
     {id:'sacred_text',name:'Sacred Text',desc:'Immutable authority. Mutation-resistant.',v:7,s:10,r:'authority'},
     {id:'ritual',name:'Shared Ritual',desc:'Ritual syncs groups. Builds loyalty.',v:8,s:8,r:'tribal'},
     {id:'d_punish',name:'Divine Punishment',desc:'Compliance through fear.',v:7,s:8,r:'fear'},
     {id:'chosen',name:'Chosen People',desc:'We are chosen. Outgroup excluded.',v:6,s:9,r:'tribal'},
   ]},
-  {name:'CONSPIRACY',color:'#a1a1aa',emoji:'\uD83D\uDC41',memes:[
+  {name:'CONSPIRACY',color:'#4ade80',hsl:[142,70,58],emoji:'\uD83D\uDC41',memes:[
     {id:'hidden_hand',name:'Hidden Controllers',desc:'Hidden rulers. Can\'t be disproved.',v:9,s:8,r:'paranoia'},
     {id:'fake_events',name:'Fabricated Events',desc:'Evidence against it = proof of it.',v:8,s:7,r:'paranoia'},
     {id:'pattern',name:'Pattern & Agency',desc:'Sees patterns everywhere. Hardwired.',v:10,s:6,r:'cognition'},
     {id:'us_them',name:'Us vs Them',desc:'Pure in-group vs. evil out-group.',v:9,s:9,r:'tribal'},
     {id:'suppressed',name:'Suppressed Truth',desc:'Secret truth = status. Unfalsifiable.',v:8,s:8,r:'status'},
   ]},
-  {name:'POLITICAL',color:'#71717a',emoji:'\u270A',memes:[
+  {name:'POLITICAL',color:'#f87171',hsl:[0,92,71],emoji:'\u270A',memes:[
     {id:'golden_age',name:'Golden Age Past',desc:'Lost golden age. Justifies extremism.',v:8,s:8,r:'loss'},
     {id:'manifest',name:'Manifest Destiny',desc:'Conquest framed as destiny.',v:7,s:8,r:'authority'},
     {id:'class_enemy',name:'Class Enemy',desc:'All suffering from identifiable outgroup.',v:8,s:7,r:'fear'},
     {id:'vanguard',name:'Vanguard Elect',desc:'Only true believers may lead.',v:6,s:9,r:'status'},
   ]},
-  {name:'TECHNO-CULTURAL',color:'#e4e4e7',emoji:'\u26A1',memes:[
+  {name:'TECHNO-CULTURAL',color:'#38bdf8',hsl:[199,92,60],emoji:'\u26A1',memes:[
     {id:'singularity',name:'The Singularity',desc:'AI salvation. Secular end-times.',v:9,s:7,r:'existential'},
     {id:'simulation',name:'Simulation Theory',desc:'We\'re in a simulation. Unfalsifiable.',v:9,s:7,r:'paranoia'},
     {id:'memhazard',name:'Memetic Hazard',desc:'Reading this spreads it.',v:10,s:5,r:'cognition'},
     {id:'accel',name:'Accelerationism',desc:'Break it faster. Chaos = cleansing.',v:7,s:8,r:'tribal'},
   ]},
-  {name:'DEEP CULTURAL',color:'#a8a8b3',emoji:'\uD83C\uDF00',memes:[
+  {name:'DEEP CULTURAL',color:'#c084fc',hsl:[270,95,75],emoji:'\uD83C\uDF00',memes:[
     {id:'hero',name:'The Hero Journey',desc:'The hero story. Wired into everyone.',v:10,s:9,r:'cognition'},
     {id:'zero_sum',name:'Zero-Sum World',desc:'Every win is someone\'s loss.',v:8,s:8,r:'fear'},
     {id:'purity',name:'Purity / Pollution',desc:'Purity policed by disgust.',v:8,s:9,r:'tribal'},
@@ -528,17 +528,38 @@ var CATS=[
   ]},
 ];
 var MPLEXES=[
-  {id:'abrahamic',name:'ABRAHAMIC COMPLEX',color:'#d4d4d8',req:['afterlife','sacred_text','d_punish'],opt:['chosen','ritual','purity','martyrdom'],desc:'Monotheism + afterlife + divine law + chosen tribe.',world:'Christianity, Islam, Judaism \u2014 ~4B carriers.',hook:'Death anxiety + tribal belonging + moral order'},
-  {id:'qanon',name:'Q-TYPE COMPLEX',color:'#a8a8b3',req:['hidden_hand','suppressed','us_them'],opt:['fake_events','pattern','chosen','vanguard'],desc:'Digital-era conspiracy. Decentralized prophecy engine.',world:'QAnon, deep-state narratives, anti-vaxx, flat earth.',hook:'Status via secret knowledge + unfalsifiability'},
-  {id:'fascist',name:'FASCIST COMPLEX',color:'#71717a',req:['golden_age','us_them','vanguard'],opt:['manifest','class_enemy','chosen','purity','martyrdom'],desc:'Past glory + present threat + chosen vanguard.',world:'Ethno-nationalist movements, historical fascism.',hook:'Loss + threat + restoration + purification'},
-  {id:'techgnosis',name:'TECH-GNOSTIC COMPLEX',color:'#e4e4e7',req:['singularity','simulation','memhazard'],opt:['accel','hero','suppressed'],desc:'Silicon Valley eschatology. Code-as-god.',world:'EA, LessWrong, longtermism, AI-safety.',hook:'Existential significance + technological rapture'},
-  {id:'revol',name:'REVOLUTIONARY COMPLEX',color:'#a1a1aa',req:['class_enemy','vanguard','zero_sum'],opt:['us_them','golden_age','hero','martyrdom'],desc:'History as class war + elect vanguard.',world:'Leninism, Maoism, revolutionary politics.',hook:'Grievance + vanguard + inevitable victory'},
-  {id:'tribal_apoc',name:'TRIBAL APOCALYPSE',color:'#8a8a95',req:['us_them','purity','d_punish'],opt:['hidden_hand','martyrdom','zero_sum','golden_age'],desc:'End-times tribalism. Cosmic outgroup threat.',world:'End-times Christianity, jihadi apocalypticism.',hook:'Cosmic tribal conflict + purification'},
-  {id:'sovereign',name:'SOVEREIGN SELF COMPLEX',color:'#636370',req:['suppressed','zero_sum','pattern'],opt:['simulation','hero','accel','memhazard'],desc:'I alone see truth. Reality is info warfare.',world:'Red-pill, sovereign citizens, preppers.',hook:'Epistemic exceptionalism + self-reliance'},
+  {id:'abrahamic',name:'ABRAHAMIC COMPLEX',color:'#e8b84b',hsl:[42,78,60],req:['afterlife','sacred_text','d_punish'],opt:['chosen','ritual','purity','martyrdom'],desc:'Monotheism + afterlife + divine law + chosen tribe.',world:'Christianity, Islam, Judaism \u2014 ~4B carriers.',hook:'Death anxiety + tribal belonging + moral order'},
+  {id:'qanon',name:'Q-TYPE COMPLEX',color:'#4ade80',hsl:[142,70,58],req:['hidden_hand','suppressed','us_them'],opt:['fake_events','pattern','chosen','vanguard'],desc:'Digital-era conspiracy. Decentralized prophecy engine.',world:'QAnon, deep-state narratives, anti-vaxx, flat earth.',hook:'Status via secret knowledge + unfalsifiability'},
+  {id:'fascist',name:'FASCIST COMPLEX',color:'#f87171',hsl:[0,92,71],req:['golden_age','us_them','vanguard'],opt:['manifest','class_enemy','chosen','purity','martyrdom'],desc:'Past glory + present threat + chosen vanguard.',world:'Ethno-nationalist movements, historical fascism.',hook:'Loss + threat + restoration + purification'},
+  {id:'techgnosis',name:'TECH-GNOSTIC COMPLEX',color:'#38bdf8',hsl:[199,92,60],req:['singularity','simulation','memhazard'],opt:['accel','hero','suppressed'],desc:'Silicon Valley eschatology. Code-as-god.',world:'EA, LessWrong, longtermism, AI-safety.',hook:'Existential significance + technological rapture'},
+  {id:'revol',name:'REVOLUTIONARY COMPLEX',color:'#fb923c',hsl:[25,96,61],req:['class_enemy','vanguard','zero_sum'],opt:['us_them','golden_age','hero','martyrdom'],desc:'History as class war + elect vanguard.',world:'Leninism, Maoism, revolutionary politics.',hook:'Grievance + vanguard + inevitable victory'},
+  {id:'tribal_apoc',name:'TRIBAL APOCALYPSE',color:'#f472b6',hsl:[330,86,70],req:['us_them','purity','d_punish'],opt:['hidden_hand','martyrdom','zero_sum','golden_age'],desc:'End-times tribalism. Cosmic outgroup threat.',world:'End-times Christianity, jihadi apocalypticism.',hook:'Cosmic tribal conflict + purification'},
+  {id:'sovereign',name:'SOVEREIGN SELF COMPLEX',color:'#a78bfa',hsl:[255,90,76],req:['suppressed','zero_sum','pattern'],opt:['simulation','hero','accel','memhazard'],desc:'I alone see truth. Reality is info warfare.',world:'Red-pill, sovereign citizens, preppers.',hook:'Epistemic exceptionalism + self-reliance'},
 ];
 var PRESETS={religion:['afterlife','sacred_text','ritual','d_punish','chosen','purity','martyrdom'],conspiracy:['hidden_hand','fake_events','pattern','us_them','suppressed','zero_sum'],tech:['singularity','simulation','memhazard','accel','hero','suppressed']};
-var TEMOJI={afterlife:'\u271D',sacred_text:'\uD83D\uDCD6',ritual:'\uD83D\uDD6F',d_punish:'\u26A1',chosen:'\u2B50',hidden_hand:'\uD83D\uDC41',fake_events:'\uD83C\uDFAD',pattern:'\uD83D\uDD2E',us_them:'\u2694',suppressed:'\uD83D\uDD12',golden_age:'\uD83D\uDC51',manifest:'\uD83D\uDDFA',class_enemy:'\u270A',vanguard:'\u2691',singularity:'\uD83E\uDD16',simulation:'\uD83D\uDCBB',memhazard:'\u2623',accel:'\uD83D\uDCA5',hero:'\uD83D\uDDE1',zero_sum:'\u2696',purity:'\uD83C\uDF3F',martyrdom:'\uD83E\uDE78'};
-var mById={};CATS.forEach(function(c){c.memes.forEach(function(m){mById[m.id]={...m,color:c.color}})});
+var mById={};CATS.forEach(function(c){c.memes.forEach(function(m){mById[m.id]={...m,color:c.color,hsl:c.hsl}})});
+
+// Color blending: average HSL of all carried memes, brightness scales with meme count
+function getAgentColor(a){
+  if(!a.memes.size) return {css:'#2a2a35',h:0,s:0,l:16};
+  var hSin=0,hCos=0,sSum=0,lSum=0,n=0;
+  a.memes.forEach(function(id){
+    var m=mById[id];if(!m||!m.hsl)return;
+    var hRad=m.hsl[0]*Math.PI/180;
+    hSin+=Math.sin(hRad);hCos+=Math.cos(hRad);
+    sSum+=m.hsl[1];lSum+=m.hsl[2];n++;
+  });
+  if(!n) return {css:'#2a2a35',h:0,s:0,l:16};
+  var avgH=Math.atan2(hSin/n,hCos/n)*180/Math.PI;
+  if(avgH<0) avgH+=360;
+  var avgS=sSum/n;
+  var avgL=lSum/n;
+  // Scale: fewer memes = dimmer, more = brighter/more saturated
+  var intensity=Math.min(1,a.memes.size/Math.max(1,sel.size));
+  var finalS=Math.round(avgS*(0.3+intensity*0.7));
+  var finalL=Math.round(18+avgL*intensity*0.65);
+  return {css:'hsl('+Math.round(avgH)+','+finalS+'%,'+finalL+'%)',h:avgH,s:finalS,l:finalL};
+}
 
 var sel=new Set(),running=false,gen=0,mutN=0;
 var agents=[],conns=[],mplexes=[],animId,logLines=[];
@@ -557,24 +578,24 @@ document.getElementById('tabs').addEventListener('click',function(e){var tab=e.t
 
 function renderLib(){var lib=document.getElementById('memeLib');lib.innerHTML='';CATS.forEach(function(cat){var lbl=document.createElement('div');lbl.className='cat-lbl';lbl.textContent=cat.emoji+' '+cat.name;lib.appendChild(lbl);cat.memes.forEach(function(m){var on=sel.has(m.id),d=document.createElement('div');d.className='chip'+(on?' on':'');d.innerHTML='<div class="chip-dot" style="background:'+cat.color+(on?';box-shadow:0 0 8px '+cat.color:'')+'"></div><div class="chip-body"><div class="chip-name">'+(on?'\u2713 ':'')+'<b>'+m.name+'</b></div><span class="chip-desc">'+m.desc+'</span></div><div class="chip-vs"><span style="color:'+cat.color+'">V:'+m.v+'</span><br>S:'+m.s+'</div>';d.addEventListener('click',function(){sel.has(m.id)?sel.delete(m.id):sel.add(m.id);renderLib();if(running)initAgents()});lib.appendChild(d)})});document.getElementById('mCnt').textContent=sel.size+(sel.size===1?' MEME':' MEMES');var hint=document.getElementById('hint');if(hint&&!running&&agents.length===0)hint.querySelector('.hint-txt').innerHTML=sel.size>0?'MEMES SELECTED \u2014 PRESS RUN':'SELECT MEMES \u2014 PRESS RUN'}
 
-function initAgents(){var W=canvas.width,H=canvas.height;if(W===0||H===0)return;agents=[];for(var i=0;i<N;i++){var pool=[...sel],am=new Set();if(pool.length){var n=Math.min(pool.length,Math.floor(Math.random()*2)+1),sh=[...pool].sort(function(){return Math.random()-.5});for(var j=0;j<n;j++)am.add(sh[j])}agents.push({x:24+Math.random()*(W-48),y:24+Math.random()*(H-56),vx:(Math.random()-.5)*.8,vy:(Math.random()-.5)*.8,memes:am,mplex:null,sc:.82+Math.random()*.28,sus:.3+Math.random()*.7,ph:Math.random()*Math.PI*2,ws:.045+Math.random()*.035,hat:Math.random()<.12,glasses:Math.random()<.1,thought:null,tt:0,flash:0})}conns=[];gen=0;mutN=0;sparkHistory=[];updateStats()}
+function initAgents(){var W=canvas.width,H=canvas.height;if(W===0||H===0)return;agents=[];for(var i=0;i<N;i++){var pool=[...sel],am=new Set();if(pool.length){var n=Math.min(pool.length,Math.floor(Math.random()*2)+1),sh=[...pool].sort(function(){return Math.random()-.5});for(var j=0;j<n;j++)am.add(sh[j])}agents.push({x:24+Math.random()*(W-48),y:24+Math.random()*(H-56),vx:(Math.random()-.5)*.8,vy:(Math.random()-.5)*.8,memes:am,mplex:null,sc:.82+Math.random()*.28,sus:.3+Math.random()*.7,ph:Math.random()*Math.PI*2,ws:.045+Math.random()*.035,hat:Math.random()<.12,glasses:Math.random()<.1,flash:0})}conns=[];gen=0;mutN=0;sparkHistory=[];updateStats()}
 
 function drawBg(){ctx.fillStyle='rgba(255,255,255,.012)';var sp=28,W=canvas.width,H=canvas.height;for(var gx=sp;gx<W;gx+=sp)for(var gy=sp;gy<H;gy+=sp){ctx.beginPath();ctx.arc(gx,gy,.5,0,Math.PI*2);ctx.fill()}}
 
-function drawPerson(a,bc,gc){var x=a.x,y=a.y,sc=a.sc,ph=a.ph,sw=Math.sin(ph)*1.4;ctx.save();if(gc){var grd=ctx.createRadialGradient(x,y,4*sc,x,y,14*sc);grd.addColorStop(0,gc+'18');grd.addColorStop(1,gc+'00');ctx.fillStyle=grd;ctx.beginPath();ctx.arc(x,y,14*sc,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x,y+1,11*sc,0,Math.PI*2);ctx.strokeStyle=gc+'35';ctx.lineWidth=1.5*sc;ctx.stroke()}ctx.beginPath();ctx.arc(x,y-9*sc,4.4*sc,0,Math.PI*2);ctx.fillStyle=bc;ctx.fill();ctx.strokeStyle=bc;ctx.lineWidth=2.4*sc;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y-4.5*sc);ctx.lineTo(x,y+3.5*sc);ctx.stroke();var aw=Math.sin(ph*1.2)*2;ctx.lineWidth=1.8*sc;ctx.beginPath();ctx.moveTo(x-4.5*sc,y-sc+aw);ctx.lineTo(x,y+.5*sc);ctx.lineTo(x+4.5*sc,y-sc-aw);ctx.stroke();ctx.beginPath();ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x-3*sc,y+9*sc+sw);ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x+3*sc,y+9*sc-sw);ctx.stroke();ctx.fillStyle=a.mplex?'rgba(255,255,255,.85)':'rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(x-1.8*sc,y-9.5*sc,.85*sc,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x+1.8*sc,y-9.5*sc,.85*sc,0,Math.PI*2);ctx.fill();if(a.hat){ctx.fillStyle=bc;ctx.fillRect(x-5*sc,y-14.5*sc,10*sc,2*sc);ctx.fillRect(x-3*sc,y-19*sc,6*sc,5*sc)}if(a.glasses){ctx.strokeStyle='rgba(200,200,220,.45)';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(x-2*sc,y-9.5*sc,1.5*sc,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(x+2*sc,y-9.5*sc,1.5*sc,0,Math.PI*2);ctx.stroke()}if(a.flash>0){var fr=a.flash/6;var fg=ctx.createRadialGradient(x,y-2*sc,0,x,y-2*sc,16*sc*fr);fg.addColorStop(0,'rgba(255,255,255,'+(fr*.25)+')');fg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(x,y-2*sc,16*sc*fr,0,Math.PI*2);ctx.fill()}if(a.thought&&a.tt>0){var al=Math.min(1,a.tt/12);ctx.save();ctx.globalAlpha=al*.7;for(var i=0;i<2;i++){ctx.beginPath();ctx.arc(x+2+i*3,y-15*sc-i*3,1.1-i*.3,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.25)';ctx.fill()}ctx.font='10px sans-serif';var tw=ctx.measureText(a.thought).width;var bx=x-tw/2+3,by=y-26*sc-9,bw=tw+10,bh=15;ctx.fillStyle='rgba(8,8,15,.85)';ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=.6;var rad=3;ctx.beginPath();ctx.moveTo(bx+rad,by);ctx.lineTo(bx+bw-rad,by);ctx.arcTo(bx+bw,by,bx+bw,by+rad,rad);ctx.lineTo(bx+bw,by+bh-rad);ctx.arcTo(bx+bw,by+bh,bx+bw-rad,by+bh,rad);ctx.lineTo(bx+rad,by+bh);ctx.arcTo(bx,by+bh,bx,by+bh-rad,rad);ctx.lineTo(bx,by+rad);ctx.arcTo(bx,by,bx+rad,by,rad);ctx.fill();ctx.stroke();ctx.fillStyle='rgba(255,255,255,.75)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(a.thought,bx+bw/2,by+bh/2);ctx.restore()}ctx.restore()}
+function drawPerson(a,bc,gc){var x=a.x,y=a.y,sc=a.sc,ph=a.ph,sw=Math.sin(ph)*1.4;ctx.save();if(gc){var grd=ctx.createRadialGradient(x,y,4*sc,x,y,16*sc);grd.addColorStop(0,gc+'20');grd.addColorStop(1,gc+'00');ctx.fillStyle=grd;ctx.beginPath();ctx.arc(x,y,16*sc,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x,y+1,12*sc,0,Math.PI*2);ctx.strokeStyle=gc+'44';ctx.lineWidth=1.8*sc;ctx.stroke()}ctx.beginPath();ctx.arc(x,y-9*sc,4.4*sc,0,Math.PI*2);ctx.fillStyle=bc;ctx.fill();ctx.strokeStyle=bc;ctx.lineWidth=2.4*sc;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y-4.5*sc);ctx.lineTo(x,y+3.5*sc);ctx.stroke();var aw=Math.sin(ph*1.2)*2;ctx.lineWidth=1.8*sc;ctx.beginPath();ctx.moveTo(x-4.5*sc,y-sc+aw);ctx.lineTo(x,y+.5*sc);ctx.lineTo(x+4.5*sc,y-sc-aw);ctx.stroke();ctx.beginPath();ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x-3*sc,y+9*sc+sw);ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x+3*sc,y+9*sc-sw);ctx.stroke();ctx.fillStyle=a.memes.size>0?'rgba(255,255,255,.8)':'rgba(60,60,75,.6)';ctx.beginPath();ctx.arc(x-1.8*sc,y-9.5*sc,.85*sc,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(x+1.8*sc,y-9.5*sc,.85*sc,0,Math.PI*2);ctx.fill();if(a.hat){ctx.fillStyle=bc;ctx.fillRect(x-5*sc,y-14.5*sc,10*sc,2*sc);ctx.fillRect(x-3*sc,y-19*sc,6*sc,5*sc)}if(a.glasses){ctx.strokeStyle='rgba(200,200,220,.4)';ctx.lineWidth=.7;ctx.beginPath();ctx.arc(x-2*sc,y-9.5*sc,1.5*sc,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(x+2*sc,y-9.5*sc,1.5*sc,0,Math.PI*2);ctx.stroke()}if(a.flash>0){var fr=a.flash/5;var fg=ctx.createRadialGradient(x,y-2*sc,0,x,y-2*sc,20*sc*fr);var fc=bc.indexOf('hsl')===0?bc.replace(')',','+fr*.35+')').replace('hsl(','hsla('):'rgba(180,180,200,'+(fr*.3)+')';fg.addColorStop(0,fc);fg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(x,y-2*sc,20*sc*fr,0,Math.PI*2);ctx.fill()}ctx.restore()}
 
-function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);drawBg();ctx.lineCap='round';ctx.setLineDash([]);conns.forEach(function(c){if(!c.sh)return;var fade=Math.max(0,.15-c.dist/600)*(1-c.dist/c.range);ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);ctx.strokeStyle='rgba(255,255,255,'+(fade*2.2)+')';ctx.lineWidth=1;ctx.stroke()});ctx.setLineDash([2,5]);conns.forEach(function(c){if(c.sh)return;var fade=Math.max(0,.12-c.dist/600)*(1-c.dist/c.range);ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);ctx.strokeStyle='rgba(140,140,170,'+(fade*1.2)+')';ctx.lineWidth=.4;ctx.stroke()});ctx.setLineDash([]);var sorted=[...agents].sort(function(a,b){return a.y-b.y});sorted.forEach(function(a){var pm=a.memes.size?mById[[...a.memes][0]]:null;var bc=pm?pm.color:'#4a4a58';var mpd=a.mplex?MPLEXES.find(function(d){return d.id===a.mplex}):null;drawPerson(a,bc,mpd?mpd.color:null)})}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);drawBg();ctx.lineCap='round';ctx.setLineDash([]);conns.forEach(function(c){if(!c.sh)return;var fade=Math.max(0,.15-c.dist/600)*(1-c.dist/c.range);ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);ctx.strokeStyle='rgba(255,255,255,'+(fade*2.5)+')';ctx.lineWidth=1.1;ctx.stroke()});ctx.setLineDash([2,5]);conns.forEach(function(c){if(c.sh)return;var fade=Math.max(0,.1-c.dist/600)*(1-c.dist/c.range);ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);ctx.strokeStyle='rgba(120,120,150,'+(fade*1)+')';ctx.lineWidth=.35;ctx.stroke()});ctx.setLineDash([]);var sorted=[...agents].sort(function(a,b){return a.y-b.y});sorted.forEach(function(a){var ac=getAgentColor(a);var mpd=a.mplex?MPLEXES.find(function(d){return d.id===a.mplex}):null;drawPerson(a,ac.css,mpd?mpd.color:null)})}
 
 var sparkCvs=document.getElementById('sparkCanvas'),sparkCtx=sparkCvs.getContext('2d');
 function drawSpark(){var w=sparkCvs.parentElement.clientWidth;sparkCvs.width=w;sparkCvs.height=38;if(!sparkHistory.length)return;var h=38,len=sparkHistory.length,step=w/SPARK_MAX;sparkCtx.clearRect(0,0,w,h);sparkCtx.beginPath();sparkCtx.moveTo(0,h-(sparkHistory[0].inf/100)*h);for(var i=1;i<len;i++)sparkCtx.lineTo(i*step,h-(sparkHistory[i].inf/100)*h);sparkCtx.strokeStyle='rgba(255,255,255,.25)';sparkCtx.lineWidth=1;sparkCtx.stroke();sparkCtx.lineTo((len-1)*step,h);sparkCtx.lineTo(0,h);sparkCtx.closePath();sparkCtx.fillStyle='rgba(255,255,255,.03)';sparkCtx.fill();for(var i=0;i<len;i++){if(sparkHistory[i].mx>0){sparkCtx.beginPath();sparkCtx.arc(i*step,h-4,1.5,0,Math.PI*2);sparkCtx.fillStyle='rgba(255,255,255,.35)';sparkCtx.fill()}}}
 
-function step(){var spd=parseInt(document.getElementById('spd').value);for(var s=0;s<spd;s++){gen++;move();spread();evalMx();if(gen%20===0)decay();if(gen%50===0)mutate()}agents.forEach(function(a){a.ph+=a.ws;if(a.tt>0)a.tt--;if(a.flash>0)a.flash-=.4});if(gen%3===0){var tot=agents.reduce(function(s,a){return s+a.memes.size},0);var max=agents.length*Math.max(1,sel.size);sparkHistory.push({inf:max>0?Math.round(tot/max*100):0,mx:mplexes.length});if(sparkHistory.length>SPARK_MAX)sparkHistory.shift()}updateStats();document.getElementById('genBadge').textContent='GEN '+gen}
+function step(){var spd=parseInt(document.getElementById('spd').value);for(var s=0;s<spd;s++){gen++;move();spread();evalMx();if(gen%20===0)decay();if(gen%50===0)mutate()}agents.forEach(function(a){a.ph+=a.ws;if(a.flash>0)a.flash-=.4});if(gen%3===0){var tot=agents.reduce(function(s,a){return s+a.memes.size},0);var max=agents.length*Math.max(1,sel.size);sparkHistory.push({inf:max>0?Math.round(tot/max*100):0,mx:mplexes.length});if(sparkHistory.length>SPARK_MAX)sparkHistory.shift()}updateStats();document.getElementById('genBadge').textContent='GEN '+gen}
 
 function move(){var W=canvas.width,H=canvas.height;agents.forEach(function(a){a.x+=a.vx;a.y+=a.vy;if(a.x<16||a.x>W-16)a.vx*=-1;if(a.y<16||a.y>H-26)a.vy*=-1;a.vx+=(Math.random()-.5)*.05;a.vy+=(Math.random()-.5)*.05;a.vx=Math.max(-1.2,Math.min(1.2,a.vx));a.vy=Math.max(-1.2,Math.min(1.2,a.vy))})}
 
 function spread(){if(!sel.size)return;conns=[];for(var i=0;i<agents.length;i++)for(var j=i+1;j<agents.length;j++){var a=agents[i],b=agents[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy),range=60+(a.memes.size+b.memes.size)*3;if(dist<range){var sh=[...a.memes].filter(function(id){return b.memes.has(id)});conns.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,sh:sh.length,dist:dist,range:range});tx(a,b,dist,range);tx(b,a,dist,range)}}}
 
-function tx(src,tgt,dist,range){var hit=false;src.memes.forEach(function(id){if(!tgt.memes.has(id)&&sel.has(id)){var m=mById[id];if(!m)return;if(Math.random()<(m.v/10)*tgt.sus*(1-dist/range)*.22){tgt.memes.add(id);hit=true;if(src.tt<=0){src.thought=TEMOJI[id]||'\uD83D\uDCAD';src.tt=18}}}});if(hit)tgt.flash=Math.min(5,tgt.flash+1.5)}
+function tx(src,tgt,dist,range){var hit=false;src.memes.forEach(function(id){if(!tgt.memes.has(id)&&sel.has(id)){var m=mById[id];if(!m)return;if(Math.random()<(m.v/10)*tgt.sus*(1-dist/range)*.22){tgt.memes.add(id);hit=true}}});if(hit)tgt.flash=Math.min(5,tgt.flash+2)}
 
 function decay(){agents.forEach(function(a){a.memes.forEach(function(id){if(!sel.has(id)){a.memes.delete(id);return}var m=mById[id];if(m&&Math.random()<(1-m.s/10)*.04)a.memes.delete(id)})})}
 
