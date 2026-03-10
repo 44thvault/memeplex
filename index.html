@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MEMEPLEX SIMULATOR</title>
+<title>MEME SIMULATOR</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -288,6 +288,43 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
   background:none;border:none;cursor:pointer;text-decoration:underline;
   font-family:'JetBrains Mono','Courier New',monospace;
 }
+
+/* ── SOURCES PANEL ── */
+#pSources{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column}
+.src-hero{
+  flex-shrink:0;padding:22px 18px 18px;border-bottom:1px solid #222;
+  background:#050505;
+}
+.src-hero h2{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,5vw,1.9rem);
+  letter-spacing:.14em;color:#fff;margin-bottom:6px;line-height:1;
+}
+.src-hero p{font-size:.66rem;color:#777;line-height:1.7;max-width:520px}
+.src-body{padding:16px;display:flex;flex-direction:column;gap:18px}
+.src-section{display:flex;flex-direction:column;gap:2px}
+.src-section-title{
+  font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.3em;
+  color:#444;padding:8px 0 10px;border-bottom:1px solid #1a1a1a;margin-bottom:8px;
+}
+.src-item{
+  border:1px solid #1a1a1a;border-radius:2px;padding:13px;
+  background:#050505;margin-bottom:6px;
+}
+.src-item:last-child{margin-bottom:0}
+.src-title{
+  font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;
+  color:#fff;margin-bottom:2px;
+}
+.src-author{font-size:.6rem;color:#555;letter-spacing:.08em;margin-bottom:8px}
+.src-desc{font-size:.64rem;color:#888;line-height:1.7;margin-bottom:8px}
+.src-tag{
+  display:inline-block;font-size:.52rem;letter-spacing:.15em;
+  padding:2px 8px;border:1px solid #2a2a2a;color:#555;
+}
+.src-note{
+  border-top:1px solid #1a1a1a;padding:14px 0;
+  font-size:.63rem;color:#555;line-height:1.7;font-style:italic;
+}
 </style>
 </head>
 <body>
@@ -296,8 +333,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 <div id="introModal">
   <div class="modal-box">
     <div class="modal-hdr">
-      <h2>MEMEPLEX SIMULATOR</h2>
-      <p>Watch ideas spread, mutate, and self-organize into belief systems — in real time.</p>
+      <h2>MEME SIMULATOR</h2>
+      <p>Watch ideas spread, mutate, and self-organize into belief systems — in real time. This is how religions, ideologies, and conspiracy theories are born.</p>
     </div>
     <div class="modal-body">
       <div class="modal-step">
@@ -347,7 +384,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 
   <!-- HEADER -->
   <div id="hdr">
-    <h1>MEMEPLEX SIMULATOR</h1>
+    <h1>MEME SIMULATOR</h1>
     <span class="sub">Ideational Contagion Engine</span>
     <div id="genBadge">GEN 0</div>
   </div>
@@ -358,6 +395,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
     <button class="tab" onclick="goTab('pMemes',this)"><span class="tab-ico">💭</span>MEMES</button>
     <button class="tab" onclick="goTab('pStats',this)"><span class="tab-ico">📊</span>STATS</button>
     <button class="tab" onclick="goTab('pGuide',this)"><span class="tab-ico">📖</span>GUIDE</button>
+    <button class="tab" onclick="goTab('pSources',this)"><span class="tab-ico">📚</span>SOURCES</button>
   </div>
 
   <!-- MAIN -->
@@ -478,6 +516,130 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
       <div class="ticker"><div class="tick-inner" id="tickInner"></div></div>
     </div>
 
+
+    <!-- SOURCES -->
+    <div class="pnl" id="pSources">
+      <div class="src-hero">
+        <h2>Sources &amp; Further Reading</h2>
+        <p>The theory behind this simulator. Every mechanic — virality, stickiness, memeplex formation, mutation — is grounded in published research.</p>
+      </div>
+      <div class="src-body">
+
+        <div class="src-section">
+          <div class="src-section-title">FOUNDATIONAL TEXTS</div>
+
+          <div class="src-item">
+            <div class="src-title">The Selfish Gene</div>
+            <div class="src-author">Richard Dawkins · 1976</div>
+            <div class="src-desc">The origin of the word "meme." Dawkins argued cultural units replicate, compete, and evolve by the same logic as genes — variation, selection, inheritance. Chapter 11 introduces the meme concept directly. The single most important book for understanding this simulator.</div>
+            <div class="src-tag">ORIGIN OF MEMETICS</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">The Meme Machine</div>
+            <div class="src-author">Susan Blackmore · 1999</div>
+            <div class="src-desc">Extends Dawkins into a full theory of mind. Blackmore argues the self is itself a memeplex — a cluster of memes that creates the illusion of a unified "I." She introduces "temes": technology-hosted memes that replicate independently of human minds. Social media algorithms are teme machines.</div>
+            <div class="src-tag">MEMETICS · MIND</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">Darwin's Dangerous Idea</div>
+            <div class="src-author">Daniel Dennett · 1995</div>
+            <div class="src-desc">Applies evolutionary logic to culture, language, and religion. Dennett argues memes colonize brains like parasites, and that religions are self-replicating systems that evolved to survive — not to serve human interests. The host experiences them as meaning; the meme is just copying itself.</div>
+            <div class="src-tag">EVOLUTION · RELIGION</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">Breaking the Spell</div>
+            <div class="src-author">Daniel Dennett · 2006</div>
+            <div class="src-desc">Applies the meme framework specifically to religion as a natural phenomenon. Why do religions have the specific features they do — afterlife promises, in-group loyalty demands, unfalsifiable claims, divine punishment? Because those features maximise replication, not truth.</div>
+            <div class="src-tag">RELIGION · MEMETICS</div>
+          </div>
+
+        </div>
+
+        <div class="src-section">
+          <div class="src-section-title">MORAL PSYCHOLOGY &amp; TRIBAL COGNITION</div>
+
+          <div class="src-item">
+            <div class="src-title">The Righteous Mind</div>
+            <div class="src-author">Jonathan Haidt · 2012</div>
+            <div class="src-desc">Maps the six moral foundations that act as meme-hooks: care, fairness, loyalty, authority, purity, liberty. These are evolved cognitive systems — and memes that activate them spread faster. The "resonance" mechanic in this simulator is directly based on Haidt's framework.</div>
+            <div class="src-tag">MORAL PSYCHOLOGY</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">Grooming, Gossip, and the Evolution of Language</div>
+            <div class="src-author">Robin Dunbar · 1996</div>
+            <div class="src-desc">Language evolved to maintain social bonds in large groups. Gossip — information about who did what to whom — is the dominant meme vector in human society. The proximity-based transmission model in this simulator reflects Dunbar's social contagion framework.</div>
+            <div class="src-tag">LANGUAGE · SOCIAL NETWORKS</div>
+          </div>
+
+        </div>
+
+        <div class="src-section">
+          <div class="src-section-title">ACCELERATIONISM &amp; HYPERSTITION</div>
+
+          <div class="src-item">
+            <div class="src-title">Fanged Noumena</div>
+            <div class="src-author">Nick Land · 2011 (essays 1987–2007)</div>
+            <div class="src-desc">The theoretical core of CCRU (Cybernetic Culture Research Unit). Land develops hyperstition — the concept that certain fictions become real through collective belief and action. Memes that describe the future cause the future. The "memhazard" and "accel" memes in this simulator are drawn directly from this framework.</div>
+            <div class="src-tag">CCRU · HYPERSTITION</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">CCRU Writings 1997–2003</div>
+            <div class="src-author">Cybernetic Culture Research Unit · 2017</div>
+            <div class="src-desc">Collected output from the Warwick University theory collective. Introduces the Numogram, Lemurian time-sorcery, and a rigorous account of how recursive cultural systems bootstrap themselves into existence. The memeplex concept as used here owes more to CCRU than to mainstream memetics.</div>
+            <div class="src-tag">CCRU · NUMOGRAM</div>
+          </div>
+
+        </div>
+
+        <div class="src-section">
+          <div class="src-section-title">CONSPIRACY, RADICALIZATION &amp; INFORMATION WARFARE</div>
+
+          <div class="src-item">
+            <div class="src-title">A Lot of People Are Saying</div>
+            <div class="src-author">Russell Muirhead &amp; Nancy Rosenblum · 2019</div>
+            <div class="src-desc">Analysis of "new conspiracism" — conspiracy without theory, assertion without evidence. The modern conspiracy memeplex doesn't need a coherent narrative; repetition and social reinforcement do the work. The Q-TYPE COMPLEX in this simulator models this architecture.</div>
+            <div class="src-tag">CONSPIRACY · POLITICS</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">This Is Not Propaganda</div>
+            <div class="src-author">Peter Pomerantsev · 2019</div>
+            <div class="src-desc">Documents how modern information warfare operates not by promoting one narrative but by flooding the zone — creating epistemic chaos so that nothing feels certain. Relates directly to how the "suppressed truth" and "fake events" memes function in the simulator.</div>
+            <div class="src-tag">INFORMATION WARFARE</div>
+          </div>
+
+        </div>
+
+        <div class="src-section">
+          <div class="src-section-title">SIMULATION &amp; AGENT-BASED MODELING</div>
+
+          <div class="src-item">
+            <div class="src-title">Emergence: The Connected Lives of Ants, Brains, Cities, and Software</div>
+            <div class="src-author">Steven Johnson · 2001</div>
+            <div class="src-desc">The theoretical basis for agent-based modeling as used in this simulator. Complex group behavior — including ideological clustering — emerges from simple local rules. No agent "knows" about the memeplex forming; it self-assembles from individual interactions.</div>
+            <div class="src-tag">EMERGENCE · COMPLEXITY</div>
+          </div>
+
+          <div class="src-item">
+            <div class="src-title">The Tipping Point</div>
+            <div class="src-author">Malcolm Gladwell · 2000</div>
+            <div class="src-desc">Popularized the threshold model of social contagion. Ideas spread slowly until they hit a critical mass, then cascade. The "critical mass" and "dominance" toast notifications in this simulator are directly modeled on Gladwell's tipping point thresholds — 30% and 50% of population.</div>
+            <div class="src-tag">CONTAGION · THRESHOLDS</div>
+          </div>
+
+        </div>
+
+        <div class="src-note">
+          This simulator is an educational model. The memeplexes shown (Abrahamic Complex, Q-Type Complex, etc.) are analytic categories drawn from academic memetics and social psychology — not value judgments. The same framework that explains religious formation explains conspiracy formation explains Silicon Valley eschatology. The point is the structure, not the content.
+        </div>
+
+      </div>
+    </div>
   </div><!-- #main -->
 </div><!-- #app -->
 
@@ -973,10 +1135,13 @@ renderLib();
 // ── INTRO MODAL ──
 function closeIntro(){
   document.getElementById('introModal').classList.add('hidden');
-  localStorage.setItem('mplx_seen','1');
+  localStorage.setItem('mplx_v2','1');
+  // make sure SIM tab is active and canvas sized correctly
+  goTab('pSim', document.querySelector('.tab'));
+  setTimeout(resizeCvs, 80);
 }
-// Don't show on repeat visits
-if(localStorage.getItem('mplx_seen')){
+// show on first visit only
+if(localStorage.getItem('mplx_v2')){
   document.getElementById('introModal').classList.add('hidden');
 }
 
