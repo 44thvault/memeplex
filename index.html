@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MEMEPLEX SIMULATOR</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:#07070f;color:#d0d0e0;font-family:'JetBrains Mono','Courier New',monospace}
+
+/* ─ LAYOUT SHELL ─
+   The entire page is a flex column:
+   [HEADER 54px] [TABS 50px] [MAIN flex:1]
+   MAIN contains all panels stacked via display:none/block
+*/
+#app{display:flex;flex-direction:column;height:100vh;width:100%}
+
+/* HEADER */
+#hdr{
+  flex:0 0 54px;height:54px;
+  display:flex;align-items:center;padding:0 16px;gap:12px;
+  background:linear-gradient(160deg,#150005,#07070f);
+  border-bottom:2px solid #ff3c00;
+}
+#hdr h1{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,6vw,2rem);
+  letter-spacing:.12em;color:#ff3c00;text-shadow:0 0 24px rgba(255,60,0,.5);line-height:1
+}
+#hdr .sub{font-size:.55rem;color:#00ffe1;letter-spacing:.2em;display:none}
+@media(min-width:480px){#hdr .sub{display:block}}
+#genBadge{margin-left:auto;font-size:.65rem;color:#00ffe1;letter-spacing:.12em;white-space:nowrap}
+
+/* TAB BAR */
+#tabs{
+  flex:0 0 50px;height:50px;
+  display:flex;background:#0d0d1a;border-bottom:1px solid #1c1c36
+}
+.tab{
+  flex:1;border:none;background:transparent;
+  color:#4a4a6a;font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.12em;
+  cursor:pointer;border-bottom:2px solid transparent;
+  display:flex;align-items:center;justify-content:center;gap:4px
+}
+.tab.on{color:#00ffe1;border-bottom-color:#00ffe1;background:rgba(0,255,225,.04)}
+.tab-ico{font-size:.95rem}
+
+/* MAIN — fills remaining height exactly */
+#main{flex:1 1 0;min-height:0;position:relative}
+
+/* PANELS — each fills #main completely */
+.pnl{
+  position:absolute;inset:0;
+  display:none;flex-direction:column;
+  background:#07070f
+}
+.pnl.on{display:flex}
+
+/* ── SIM PANEL ── */
+#pSim{flex-direction:column}
+
+#canvas-wrap{
+  flex:1 1 0;min-height:0;
+  position:relative;overflow:hidden;
+  background:#07070f
+}
+#canvas-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+
+.hint{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;pointer-events:none
+}
+.hint-ico{font-size:2.5rem;opacity:.3}
+.hint-txt{font-size:.6rem;color:#4a4a6a;letter-spacing:.18em;text-align:center;line-height:2.2}
+
+.toast-el{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:rgba(7,7,15,.96);border:1px solid #c800ff;
+  padding:8px 20px;font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.15em;
+  color:#c800ff;text-shadow:0 0 10px rgba(200,0,255,.5);
+  opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;z-index:50
+}
+.toast-el.show{opacity:1}
+
+/* CONTROLS BAR — explicit height, flex-shrink:0, never moves */
+#ctrlBar{
+  flex:0 0 52px;min-height:52px;max-height:52px;
+  display:flex;align-items:center;gap:8px;padding:0 12px;
+  background:#060610;border-top:1px solid #1c1c36;
+  overflow:hidden
+}
+.btn{
+  font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.14em;
+  padding:9px 18px;border:1px solid;background:transparent;
+  cursor:pointer;border-radius:1px;white-space:nowrap;flex-shrink:0
+}
+.btn-run{border-color:#ff3c00;color:#ff3c00}
+.btn-run.on{background:#ff3c00;color:#000;box-shadow:0 0 16px rgba(255,60,0,.4)}
+.btn-rst{border-color:#3a3a5a;color:#3a3a5a}
+.spd-wrap{display:flex;align-items:center;gap:5px;font-size:.56rem;color:#4a4a6a;white-space:nowrap;flex-shrink:0}
+.spd-wrap input[type=range]{width:52px;accent-color:#00ffe1;cursor:pointer}
+#mCnt{margin-left:auto;font-size:.58rem;color:#ffe600;letter-spacing:.08em;white-space:nowrap}
+
+/* ── MEMES PANEL ── */
+#pMemes{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;padding:12px;gap:4px}
+
+.preset-row{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:10px}
+.pbtn{
+  font-family:'Bebas Neue',sans-serif;font-size:.74rem;letter-spacing:.1em;
+  padding:7px 13px;border:1px solid #1c1c36;background:transparent;
+  color:#6a6a8a;cursor:pointer;border-radius:2px
+}
+.pbtn:active{color:#d0d0e0;border-color:#00ffe1}
+
+.cat-lbl{
+  font-size:.56rem;letter-spacing:.3em;color:#4a4a6a;
+  padding:10px 2px 5px;border-bottom:1px solid #111128;margin-bottom:3px
+}
+.chip{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 10px;border:1px solid transparent;border-radius:3px;
+  cursor:pointer;min-height:48px;background:rgba(255,255,255,.02);
+  margin-bottom:2px
+}
+.chip.on{border-color:#ff3c00;background:rgba(255,60,0,.07)}
+.chip-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.chip-body{flex:1;min-width:0}
+.chip-name{font-size:.75rem;color:#d0d0e0;line-height:1.3}
+.chip.on .chip-name{color:#fff;font-weight:700}
+.chip-desc{display:block;font-size:.6rem;color:#5a5a7a;margin-top:2px;line-height:1.4}
+.chip-vs{flex-shrink:0;font-size:.58rem;color:#5a5a7a;text-align:right;line-height:1.8}
+
+/* ── STATS PANEL ── */
+#pStats{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;padding:12px;gap:12px}
+
+.card{background:#0d0d1a;border:1px solid #1c1c36;border-radius:3px;padding:13px}
+.card-ttl{font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.2em;color:#00ffe1;margin-bottom:11px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.mlbl{display:block;font-size:.58rem;color:#4a4a6a;letter-spacing:.12em;margin-bottom:2px}
+.mval{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;color:#00ffe1}
+.dom-lbl{display:block;font-size:.58rem;color:#4a4a6a;letter-spacing:.12em;margin-top:10px;margin-bottom:2px}
+.dom-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.1em;color:#ff3c00}
+
+.mx-item{border:1px solid #1c1c36;border-radius:3px;padding:11px;margin-bottom:7px;background:rgba(255,255,255,.01)}
+.mx-item.dom{border-color:#ff3c00;background:rgba(255,60,0,.04)}
+.mx-item:last-child{margin-bottom:0}
+.mx-name{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.12em;margin-bottom:5px}
+.mx-track{background:rgba(255,255,255,.05);height:5px;border-radius:3px;overflow:hidden;margin:4px 0}
+.mx-bar{height:100%;border-radius:3px;transition:width .35s}
+.mx-row{display:flex;justify-content:space-between;font-size:.6rem;color:#5a5a7a;margin-top:3px}
+.mx-desc{font-size:.62rem;color:#5a5a7a;margin-top:5px;line-height:1.5}
+.mx-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.mx-tag{font-size:.54rem;padding:2px 7px;border-radius:2px}
+
+.logbox{background:rgba(0,0,0,.5);border:1px solid #1c1c36;padding:8px;
+  max-height:150px;overflow-y:auto;display:flex;flex-direction:column-reverse;gap:2px}
+.ll{font-size:.6rem;color:#5a5a7a;line-height:1.5}
+.ll span{color:#00ffe1}
+.ll.w span{color:#ff3c00}
+.ll.c span{color:#c800ff}
+
+/* ── GUIDE PANEL ── */
+#pGuide{overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column}
+
+.g-hero{
+  flex-shrink:0;padding:22px 16px;text-align:center;
+  background:linear-gradient(135deg,#110006,#060512);border-bottom:1px solid #ff3c00
+}
+.g-hero h2{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,6vw,2.2rem);
+  letter-spacing:.14em;color:#ff3c00;text-shadow:0 0 16px rgba(255,60,0,.4);margin-bottom:7px
+}
+.g-hero p{font-size:clamp(.66rem,2.5vw,.72rem);color:#7070a0;line-height:1.85;max-width:500px;margin:0 auto}
+
+.g-body{padding:14px;display:flex;flex-direction:column;gap:12px}
+
+.gsec{border:1px solid #1c1c36;border-radius:3px;overflow:hidden;background:#0d0d1a}
+.gsec-hd{
+  font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;
+  padding:10px 13px;border-bottom:1px solid #1c1c36
+}
+.gsec-bd{padding:14px;font-size:clamp(.66rem,2.3vw,.72rem);color:#b0b0c8;line-height:1.85}
+.gsec-bd p{margin-bottom:9px}
+.gsec-bd p:last-child{margin-bottom:0}
+.gsec-bd strong{color:#00ffe1}
+.gsec-bd em{color:#ffe600;font-style:normal}
+
+.acc{border:1px solid #1c1c36;border-radius:3px;overflow:hidden;margin-bottom:7px}
+.acc-hd{
+  display:flex;align-items:center;gap:9px;padding:10px 12px;
+  cursor:pointer;background:rgba(255,255,255,.015)
+}
+.acc-nm{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.12em;flex:1}
+.acc-ar{font-size:.7rem;color:#4a4a6a;transition:transform .2s}
+.acc-ar.open{transform:rotate(180deg)}
+.acc-bd{display:none;padding:12px;border-top:1px solid #1c1c36;background:rgba(0,0,0,.2)}
+.acc-bd.open{display:block}
+.acc-bd p{font-size:.65rem;color:#6a6a8a;line-height:1.7;margin-bottom:6px}
+.acc-bd strong{color:#c0c0d8}
+.acc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.acc-tag{font-size:.54rem;padding:2px 7px;border-radius:2px}
+.acc-note{margin-top:7px;font-size:.56rem;color:#4a4a6a}
+
+.prop-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:5px}
+@media(min-width:460px){.prop-grid{grid-template-columns:repeat(3,1fr)}}
+.prop{background:rgba(255,255,255,.02);border:1px solid #1c1c36;border-radius:3px;padding:9px}
+.prop-t{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.12em;margin-bottom:4px}
+.prop-b{font-size:.6rem;color:#5a5a7a;line-height:1.5}
+
+.ticker{flex-shrink:0;height:28px;overflow:hidden;background:#040409;border-top:1px solid #1c1c36;display:flex;align-items:center}
+.tick-inner{
+  display:flex;gap:50px;white-space:nowrap;
+  animation:tick 60s linear infinite;
+  font-size:.56rem;color:#4a4a6a;letter-spacing:.08em
+}
+.tick-inner em{color:#ff3c00;font-style:normal}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* DESKTOP 3-col */
+@media(min-width:900px){
+  #tabs{display:none}
+  #main{display:grid!important;grid-template-columns:270px 1fr 255px}
+  .pnl{position:static;display:flex!important;height:100%}
+  #pSim{border:none}
+  #pMemes{border-right:1px solid #1c1c36}
+  #pStats{border-left:1px solid #1c1c36}
+  #pGuide{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="hdr">
+    <h1>MEMEPLEX SIMULATOR</h1>
+    <span class="sub">Ideational Contagion Engine</span>
+    <div id="genBadge">GEN 0</div>
+  </div>
+
+  <!-- TABS -->
+  <div id="tabs">
+    <button class="tab on" onclick="goTab('pSim',this)"><span class="tab-ico">👥</span>SIM</button>
+    <button class="tab" onclick="goTab('pMemes',this)"><span class="tab-ico">💭</span>MEMES</button>
+    <button class="tab" onclick="goTab('pStats',this)"><span class="tab-ico">📊</span>STATS</button>
+    <button class="tab" onclick="goTab('pGuide',this)"><span class="tab-ico">📖</span>GUIDE</button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- SIM -->
+    <div class="pnl on" id="pSim">
+      <div id="canvas-wrap">
+        <canvas id="c"></canvas>
+        <div class="hint" id="hint">
+          <div class="hint-ico">🧠</div>
+          <div class="hint-txt">OPEN THE MEMES TAB<br>SELECT MEMES — PRESS RUN</div>
+        </div>
+        <div class="toast-el" id="toast"></div>
+      </div>
+      <div id="ctrlBar">
+        <button class="btn btn-run" id="btnRun" onclick="toggleSim()">▶ RUN</button>
+        <button class="btn btn-rst" onclick="resetSim()">↺ RESET</button>
+        <div class="spd-wrap">SPD<input type="range" id="spd" min="1" max="8" value="4"></div>
+        <div id="mCnt">0 MEMES</div>
+      </div>
+    </div>
+
+    <!-- MEMES -->
+    <div class="pnl" id="pMemes">
+      <div class="preset-row">
+        <button class="pbtn" onclick="doPreset('religion')">⛪ Religion</button>
+        <button class="pbtn" onclick="doPreset('conspiracy')">👁 Conspiracy</button>
+        <button class="pbtn" onclick="doPreset('tech')">⚡ Tech-Gnosis</button>
+        <button class="pbtn" onclick="doPreset('all')">🌐 All</button>
+        <button class="pbtn" onclick="doClear()">✕ Clear</button>
+      </div>
+      <div id="memeLib"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="pnl" id="pStats">
+      <div class="card">
+        <div class="card-ttl">Live Metrics</div>
+        <div class="metrics">
+          <div><span class="mlbl">POPULATION</span><span class="mval" id="sA">0</span></div>
+          <div><span class="mlbl">MEMEPLEXES</span><span class="mval" id="sM">0</span></div>
+          <div><span class="mlbl">INFECTION</span><span class="mval" id="sR">0%</span></div>
+          <div><span class="mlbl">MUTATIONS</span><span class="mval" id="sMu">0</span></div>
+        </div>
+        <span class="dom-lbl">DOMINANT MEMEPLEX</span>
+        <div class="dom-val" id="sDom">—</div>
+      </div>
+      <div class="card">
+        <div class="card-ttl">Active Memeplexes</div>
+        <div id="mxList"><div style="color:#4a4a6a;font-size:.64rem;text-align:center;padding:8px 0;line-height:1.9">No memeplexes formed yet.<br><span style="color:#00ffe1">Run the simulation to watch ideas cluster.</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-ttl">Event Log</div>
+        <div class="logbox" id="logbox"></div>
+      </div>
+    </div>
+
+    <!-- GUIDE -->
+    <div class="pnl" id="pGuide">
+      <div class="g-hero">
+        <h2>What is a Memeplex?</h2>
+        <p>Ideas don't travel alone. They cluster into self-reinforcing systems that reshape minds, cultures, and civilizations. This simulator shows you exactly how it happens, one mind at a time.</p>
+      </div>
+      <div class="g-body">
+
+        <div class="gsec">
+          <div class="gsec-hd" style="color:#00ffe1">◈ &nbsp;Memes &amp; Memeplexes — The Basics</div>
+          <div class="gsec-bd">
+            <p>In 1976, biologist <strong>Richard Dawkins</strong> coined the word <em>meme</em> — a unit of cultural information that replicates from mind to mind, just as genes replicate from body to body.</p>
+            <p>A <strong>memeplex</strong> is what happens when memes cluster for mutual survival. Afterlife spreads better alongside sacred texts, divine punishment, and ritual. They protect and amplify each other.</p>
+            <p>Religions, ideologies, conspiracy theories — all memeplexes. Nobody designs them. <em>They self-organize through selection pressure.</em></p>
+          </div>
+        </div>
+
+        <div class="gsec">
+          <div class="gsec-hd" style="color:#ffe600">◉ &nbsp;Key Properties</div>
+          <div class="gsec-bd">
+            <div class="prop-grid">
+              <div class="prop"><div class="prop-t" style="color:#ff3c00">Virality</div><div class="prop-b">How fast it spreads on contact. Fear-based memes go fastest — amygdala hijack bypasses critical thinking.</div></div>
+              <div class="prop"><div class="prop-t" style="color:#00ffe1">Stickiness</div><div class="prop-b">How long it survives once adopted. Unfalsifiable beliefs score 10/10 — evidence bounces off.</div></div>
+              <div class="prop"><div class="prop-t" style="color:#c800ff">Resonance</div><div class="prop-b">Which cognitive system it hooks: fear, tribalism, status anxiety, existential dread, pattern recognition.</div></div>
+              <div class="prop"><div class="prop-t" style="color:#ffe600">Mutation</div><div class="prop-b">Every retelling drifts. Heresies are mutations — occasionally one outcompetes the parent meme.</div></div>
+              <div class="prop"><div class="prop-t" style="color:#ff9500">Selection</div><div class="prop-b">Memes compete for cognitive bandwidth. Social media algorithms now act as artificial selection.</div></div>
+              <div class="prop"><div class="prop-t" style="color:#88ff88">Emergence</div><div class="prop-b">Memeplexes self-assemble without designers — only selection pressure required.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gsec">
+          <div class="gsec-hd" style="color:#ff3c00">◆ &nbsp;The 7 Memeplexes — Field Guide</div>
+          <div class="gsec-bd" style="padding-bottom:4px">
+            <div id="encyclopedia"></div>
+          </div>
+        </div>
+
+        <div class="gsec">
+          <div class="gsec-hd" style="color:#c800ff">◈ &nbsp;The Theorists</div>
+          <div class="gsec-bd">
+            <p><strong>Richard Dawkins</strong> (The Selfish Gene, 1976) — coined "meme." Cultural transmission follows evolutionary logic: variation, selection, inheritance.</p>
+            <p><strong>Susan Blackmore</strong> (The Meme Machine, 1999) — the self is a memeplex, not a container. Introduced "temes" — tech-based memes replicating independently of human minds.</p>
+            <p><strong>Daniel Dennett</strong> — religions are wild memes that evolved to hijack cognitive systems exactly as parasites hijack biology.</p>
+            <p><strong>CCRU / Nick Land</strong> — hyperstition: fictions that make themselves real through collective belief and action.</p>
+            <p><strong>Jonathan Haidt</strong> — mapped the moral hooks that make memes sticky: care, fairness, loyalty, authority, purity, liberty.</p>
+          </div>
+        </div>
+
+        <div class="gsec">
+          <div class="gsec-hd" style="color:#ffe600">◆ &nbsp;Why This Matters Now</div>
+          <div class="gsec-bd">
+            <p>For most of history, memeplex spread was limited by geography and literacy. A new religion might take centuries. The internet collapsed that to years. Social media collapsed it to months.</p>
+            <p>Nobody designed QAnon. It was an evolutionary event: memes found a stable self-reinforcing configuration matching the cognitive architecture of millions under status anxiety. Anonymous "Q" was a feature — believers projected their own desires onto it, making it <em>more viral</em>.</p>
+            <p><strong>Understanding memeplexes is cognitive self-defense.</strong> When you can see the structure — afterlife + divine punishment + chosen people + cosmic enemy — you can recognize the attractor before it fully captures you.</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="ticker"><div class="tick-inner" id="tickInner"></div></div>
+    </div>
+
+  </div><!-- #main -->
+</div><!-- #app -->
+
+<script>
+// ─────────────────────────────────────
+// DATA
+// ─────────────────────────────────────
+const CATS=[
+  {name:'RELIGIOUS',color:'#ffe600',emoji:'⛪',memes:[
+    {id:'afterlife',  name:'Afterlife Reward',  desc:'Reduces death anxiety. Extremely sticky.',             v:9, s:9, r:'existential'},
+    {id:'sacred_text',name:'Sacred Text',       desc:'Authority in immutable doctrine. Resists mutation.',   v:7, s:10,r:'authority'},
+    {id:'ritual',     name:'Shared Ritual',     desc:'Synchronized behavior reinforces group identity.',     v:8, s:8, r:'tribal'},
+    {id:'d_punish',   name:'Divine Punishment', desc:'Fear-based compliance mechanism.',                     v:7, s:8, r:'fear'},
+    {id:'chosen',     name:'Chosen People',     desc:'In-group superiority. Strong tribal bonding.',         v:6, s:9, r:'tribal'},
+  ]},
+  {name:'CONSPIRACY',color:'#ff3c00',emoji:'👁',memes:[
+    {id:'hidden_hand',name:'Hidden Controllers',desc:'Secret elite manipulating reality. Unfalsifiable.',    v:9, s:8, r:'paranoia'},
+    {id:'fake_events',name:'Fabricated Events', desc:'Contradicting evidence is staged. Epistemic closure.',v:8, s:7, r:'paranoia'},
+    {id:'pattern',    name:'Pattern & Agency',  desc:'Apophenia: see order, assign intent. Hardwired.',      v:10,s:6, r:'cognition'},
+    {id:'us_them',    name:'Us vs Them',         desc:'Binary world model. Outgroup threat amplification.',  v:9, s:9, r:'tribal'},
+    {id:'suppressed', name:'Suppressed Truth',  desc:'Hidden knowledge grants status. Resists refutation.', v:8, s:8, r:'status'},
+  ]},
+  {name:'POLITICAL',color:'#c800ff',emoji:'✊',memes:[
+    {id:'golden_age', name:'Golden Age Past',   desc:'Nostalgia for purity. Justifies radical action.',     v:8, s:8, r:'loss'},
+    {id:'manifest',   name:'Manifest Destiny',  desc:'Expansion as historical inevitability.',              v:7, s:8, r:'authority'},
+    {id:'class_enemy',name:'Class Enemy',        desc:'All suffering from identifiable outgroup.',           v:8, s:7, r:'fear'},
+    {id:'vanguard',   name:'Vanguard Elect',     desc:'Only the ideologically pure can lead.',               v:6, s:9, r:'status'},
+  ]},
+  {name:'TECHNO-CULTURAL',color:'#00ffe1',emoji:'⚡',memes:[
+    {id:'singularity',name:'The Singularity',   desc:'Technological rapture. Secular eschatology.',         v:9, s:7, r:'existential'},
+    {id:'simulation', name:'Simulation Theory', desc:'Reality is computational. Unfalsifiable.',            v:9, s:7, r:'paranoia'},
+    {id:'memhazard',  name:'Memetic Hazard',    desc:'Self-referential: knowing memetics spreads it.',      v:10,s:5, r:'cognition'},
+    {id:'accel',      name:'Accelerationism',   desc:'Destabilization as purification. Speed as theology.', v:7, s:8, r:'tribal'},
+  ]},
+  {name:'DEEP CULTURAL',color:'#ff9500',emoji:'🌀',memes:[
+    {id:'hero',       name:'The Hero Journey',  desc:'Narrative template wired into all human cognition.',  v:10,s:9, r:'cognition'},
+    {id:'zero_sum',   name:'Zero-Sum World',    desc:'Your gain is my loss. Scarcity locks the worldview.', v:8, s:8, r:'fear'},
+    {id:'purity',     name:'Purity / Pollution',desc:'Sacred boundary. Disgust as moral emotion.',          v:8, s:9, r:'tribal'},
+    {id:'martyrdom',  name:'Martyrdom Glamour', desc:'Suffering for belief as ultimate status signal.',     v:7, s:10,r:'status'},
+  ]},
+];
+
+const MPLEXES=[
+  {id:'abrahamic',  name:'ABRAHAMIC COMPLEX',    color:'#ffe600',
+   req:['afterlife','sacred_text','d_punish'],  opt:['chosen','ritual','purity','martyrdom'],
+   desc:'The dominant memeplex of recorded history. Monotheism + afterlife + divine law + chosen tribe.',
+   world:'Christianity, Islam, Judaism — ~4 billion current carriers.',
+   hook:'Death anxiety + tribal belonging + moral order'},
+  {id:'qanon',      name:'Q-TYPE COMPLEX',        color:'#ff3c00',
+   req:['hidden_hand','suppressed','us_them'],   opt:['fake_events','pattern','chosen','vanguard'],
+   desc:'Digital-era conspiracy memeplex. Decentralized prophecy engine. Unfalsifiability is a feature.',
+   world:'QAnon, deep-state narratives, anti-vaxx complex, flat earth communities.',
+   hook:'Status via secret knowledge + outgroup threat + unfalsifiability'},
+  {id:'fascist',    name:'FASCIST COMPLEX',        color:'#c800ff',
+   req:['golden_age','us_them','vanguard'],      opt:['manifest','class_enemy','chosen','purity','martyrdom'],
+   desc:'Ethno-nationalist memeplex. Past glory + present threat + chosen vanguard.',
+   world:'Nazism, Italian fascism, contemporary ethno-nationalist movements.',
+   hook:'Loss + threat + restoration fantasy + purification'},
+  {id:'techgnosis', name:'TECH-GNOSTIC COMPLEX',   color:'#00ffe1',
+   req:['singularity','simulation','memhazard'], opt:['accel','hero','suppressed'],
+   desc:'Silicon Valley eschatology. Code-as-god, disruption-as-salvation.',
+   world:'Effective altruism, LessWrong, longtermism, certain AI-safety communities.',
+   hook:'Existential significance + chosen intellect + technological rapture'},
+  {id:'revol',      name:'REVOLUTIONARY COMPLEX',  color:'#ff9500',
+   req:['class_enemy','vanguard','zero_sum'],    opt:['us_them','golden_age','hero','martyrdom'],
+   desc:'The Leninist attractor. History as class war + elect vanguard + purification through conflict.',
+   world:'Leninism, Maoism, strands of progressive and reactionary revolutionary politics.',
+   hook:'Grievance + elect vanguard + inevitable historical victory'},
+  {id:'tribal_apoc',name:'TRIBAL APOCALYPSE',      color:'#ff6b6b',
+   req:['us_them','purity','d_punish'],          opt:['hidden_hand','martyrdom','zero_sum','golden_age'],
+   desc:'End-times tribalism. In-group faces cosmic threat from the impure outgroup.',
+   world:'End-times Christianity, jihadi apocalypticism, survivalist communities.',
+   hook:'Cosmic significance of tribal conflict + purification + martyrdom reward'},
+  {id:'sovereign',  name:'SOVEREIGN SELF COMPLEX', color:'#88ff88',
+   req:['suppressed','zero_sum','pattern'],      opt:['simulation','hero','accel','memhazard'],
+   desc:'Radically individualist epistemology. I alone see truth. Reality is information warfare.',
+   world:'Red-pill/black-pill communities, sovereign citizen movement, prepper subcultures.',
+   hook:'Epistemic exceptionalism + victimhood + radical self-reliance'},
+];
+
+const PRESETS={
+  religion:  ['afterlife','sacred_text','ritual','d_punish','chosen','purity','martyrdom'],
+  conspiracy:['hidden_hand','fake_events','pattern','us_them','suppressed','zero_sum'],
+  tech:      ['singularity','simulation','memhazard','accel','hero','suppressed'],
+};
+const TEMOJI={
+  afterlife:'✝',sacred_text:'📖',ritual:'🕯',d_punish:'⚡',chosen:'⭐',
+  hidden_hand:'👁',fake_events:'🎭',pattern:'🔮',us_them:'⚔',suppressed:'🔒',
+  golden_age:'👑',manifest:'🗺',class_enemy:'✊',vanguard:'⚑',
+  singularity:'🤖',simulation:'💻',memhazard:'☣',accel:'💥',
+  hero:'🗡',zero_sum:'⚖',purity:'🌿',martyrdom:'🩸',
+};
+const mById={};
+CATS.forEach(c=>c.memes.forEach(m=>{mById[m.id]={...m,color:c.color}}));
+
+// ─────────────────────────────────────
+// STATE
+// ─────────────────────────────────────
+let sel=new Set(), running=false, gen=0, mutN=0;
+let agents=[], conns=[], mplexes=[], animId, logLines=[];
+const N=55;
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+
+// ─────────────────────────────────────
+// TABS
+// ─────────────────────────────────────
+function goTab(id,btn){
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  if(btn) btn.classList.add('on');
+  if(id==='pSim') setTimeout(resizeCvs,40);
+}
+
+// ─────────────────────────────────────
+// MEME LIBRARY
+// ─────────────────────────────────────
+function renderLib(){
+  const lib=document.getElementById('memeLib');
+  lib.innerHTML='';
+  CATS.forEach(cat=>{
+    const lbl=document.createElement('div');
+    lbl.className='cat-lbl';
+    lbl.textContent=cat.emoji+' '+cat.name;
+    lib.appendChild(lbl);
+    cat.memes.forEach(m=>{
+      const on=sel.has(m.id);
+      const d=document.createElement('div');
+      d.className='chip'+(on?' on':'');
+      d.innerHTML=`<div class="chip-dot" style="background:${cat.color}${on?`;box-shadow:0 0 8px ${cat.color}`:''}"></div>`+
+        `<div class="chip-body"><div class="chip-name">${on?'✓ ':''}<b>${m.name}</b></div>`+
+        `<span class="chip-desc">${m.desc}</span></div>`+
+        `<div class="chip-vs"><span style="color:${cat.color}">V:${m.v}</span><br>S:${m.s}</div>`;
+      d.onclick=()=>{
+        sel.has(m.id)?sel.delete(m.id):sel.add(m.id);
+        renderLib();
+        if(running) initAgents();
+      };
+      lib.appendChild(d);
+    });
+  });
+  document.getElementById('mCnt').textContent=sel.size+(sel.size===1?' MEME':' MEMES');
+}
+function doPreset(k){
+  if(k==='all') CATS.forEach(c=>c.memes.forEach(m=>sel.add(m.id)));
+  else (PRESETS[k]||[]).forEach(id=>sel.add(id));
+  renderLib();
+}
+function doClear(){sel.clear();renderLib();}
+
+// ─────────────────────────────────────
+// AGENTS
+// ─────────────────────────────────────
+function initAgents(){
+  const W=canvas.width,H=canvas.height;
+  agents=[];
+  for(let i=0;i<N;i++){
+    const pool=[...sel];
+    const am=new Set();
+    if(pool.length){
+      const n=Math.min(pool.length,Math.floor(Math.random()*2)+1);
+      [...pool].sort(()=>Math.random()-.5).slice(0,n).forEach(id=>am.add(id));
+    }
+    agents.push({
+      x:20+Math.random()*(W-40), y:20+Math.random()*(H-50),
+      vx:(Math.random()-.5)*.9, vy:(Math.random()-.5)*.9,
+      memes:am, mplex:null,
+      sc:.82+Math.random()*.32,
+      sus:.3+Math.random()*.7,
+      ph:Math.random()*Math.PI*2,
+      ws:.055+Math.random()*.04,
+      hat:Math.random()<.14,
+      glasses:Math.random()<.11,
+      thought:null, tt:0, flash:0,
+    });
+  }
+  conns=[];gen=0;mutN=0;
+  updateStats();
+}
+
+// ─────────────────────────────────────
+// DRAW
+// ─────────────────────────────────────
+function drawPerson(a,bc,gc){
+  const{x,y,sc,ph,hat,glasses,thought,tt,flash}=a;
+  const sw=Math.sin(ph)*1.6;
+  ctx.save();
+  if(gc){
+    ctx.beginPath();ctx.arc(x,y+2,12*sc,0,Math.PI*2);
+    ctx.strokeStyle=gc+'50';ctx.lineWidth=2.8*sc;ctx.stroke();
+  }
+  // head
+  ctx.beginPath();ctx.arc(x,y-9*sc,4.6*sc,0,Math.PI*2);
+  ctx.fillStyle=bc;ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=.7;ctx.stroke();
+  // body
+  ctx.strokeStyle=bc;ctx.lineWidth=2.6*sc;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x,y-4.5*sc);ctx.lineTo(x,y+3.5*sc);ctx.stroke();
+  // arms
+  const aw=Math.sin(ph*1.2)*2.2;
+  ctx.lineWidth=2*sc;
+  ctx.beginPath();ctx.moveTo(x-4.5*sc,y-sc+aw);ctx.lineTo(x,y+.5*sc);ctx.lineTo(x+4.5*sc,y-sc-aw);ctx.stroke();
+  // legs
+  ctx.beginPath();
+  ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x-3.2*sc,y+9.5*sc+sw);
+  ctx.moveTo(x,y+3.5*sc);ctx.lineTo(x+3.2*sc,y+9.5*sc-sw);
+  ctx.stroke();
+  // eyes
+  ctx.fillStyle=a.mplex?'rgba(255,255,255,.9)':'rgba(0,0,0,.6)';
+  ctx.beginPath();ctx.arc(x-1.9*sc,y-9.6*sc,.95*sc,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x+1.9*sc,y-9.6*sc,.95*sc,0,Math.PI*2);ctx.fill();
+  // hat
+  if(hat){ctx.fillStyle=bc;ctx.fillRect(x-5.5*sc,y-15*sc,11*sc,2.2*sc);ctx.fillRect(x-3.2*sc,y-20*sc,6.4*sc,5.5*sc);}
+  // glasses
+  if(glasses){
+    ctx.strokeStyle='rgba(0,255,225,.75)';ctx.lineWidth=.8;
+    ctx.beginPath();ctx.arc(x-2.1*sc,y-9.6*sc,1.7*sc,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(x+2.1*sc,y-9.6*sc,1.7*sc,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-.4*sc,y-9.6*sc);ctx.lineTo(x+.4*sc,y-9.6*sc);ctx.stroke();
+  }
+  // flash
+  if(flash>0){
+    ctx.beginPath();ctx.arc(x,y-3*sc,17*sc*(flash/8),0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,255,255,${flash/8*.5})`;ctx.lineWidth=1.4;ctx.stroke();
+  }
+  // thought bubble
+  if(thought&&tt>0){
+    const al=Math.min(1,tt/18);
+    ctx.save();ctx.globalAlpha=al;
+    for(let i=0;i<3;i++){const r=1.5-i*.3;ctx.beginPath();ctx.arc(x+3+i*3.5,y-16*sc-i*3,r,0,Math.PI*2);ctx.fillStyle=bc+'cc';ctx.fill();}
+    ctx.font='11px sans-serif';
+    const tw=ctx.measureText(thought).width;
+    const bx=x-tw/2+5,by=y-30*sc-12,bw=tw+12,bh=18;
+    ctx.fillStyle='rgba(7,7,15,.9)';ctx.strokeStyle=bc+'bb';ctx.lineWidth=1;
+    ctx.beginPath();ctx.rect(bx,by,bw,bh);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(thought,bx+bw/2,by+bh/2);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // connections
+  conns.forEach(c=>{
+    const fade=Math.max(0,.18-c.dist/530)*(1-c.dist/c.range);
+    ctx.beginPath();ctx.moveTo(c.ax,c.ay);ctx.lineTo(c.bx,c.by);
+    if(c.sh){ctx.strokeStyle=`rgba(0,255,225,${fade*3})`;ctx.lineWidth=1.3;ctx.setLineDash([]);}
+    else{ctx.strokeStyle=`rgba(180,180,210,${fade*1.8})`;ctx.lineWidth=.6;ctx.setLineDash([3,4]);}
+    ctx.stroke();ctx.setLineDash([]);
+  });
+  // agents depth-sorted
+  [...agents].sort((a,b)=>a.y-b.y).forEach(a=>{
+    const pm=a.memes.size?mById[[...a.memes][0]]:null;
+    const bc=pm?pm.color:'#5a5a78';
+    const mpd=a.mplex?MPLEXES.find(d=>d.id===a.mplex):null;
+    drawPerson(a,bc,mpd?mpd.color:null);
+  });
+}
+
+// ─────────────────────────────────────
+// SIMULATION
+// ─────────────────────────────────────
+function step(){
+  const spd=parseInt(document.getElementById('spd').value);
+  for(let s=0;s<spd;s++){
+    gen++;
+    move();spread();evalMx();
+    if(gen%18===0) decay();
+    if(gen%46===0) mutate();
+  }
+  agents.forEach(a=>{a.ph+=a.ws;if(a.tt>0)a.tt--;if(a.flash>0)a.flash--;});
+  updateStats();
+  document.getElementById('genBadge').textContent='GEN '+gen;
+}
+
+function move(){
+  const W=canvas.width,H=canvas.height;
+  agents.forEach(a=>{
+    a.x+=a.vx;a.y+=a.vy;
+    if(a.x<14||a.x>W-14)a.vx*=-1;
+    if(a.y<14||a.y>H-24)a.vy*=-1;
+    a.vx+=(Math.random()-.5)*.06;a.vy+=(Math.random()-.5)*.06;
+    a.vx=Math.max(-1.4,Math.min(1.4,a.vx));a.vy=Math.max(-1.4,Math.min(1.4,a.vy));
+  });
+}
+
+function spread(){
+  if(!sel.size)return;
+  conns=[];
+  for(let i=0;i<agents.length;i++) for(let j=i+1;j<agents.length;j++){
+    const a=agents[i],b=agents[j];
+    const dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+    const range=64+(a.memes.size+b.memes.size)*3.5;
+    if(dist<range){
+      const sh=[...a.memes].filter(id=>b.memes.has(id));
+      conns.push({ax:a.x,ay:a.y,bx:b.x,by:b.y,sh:sh.length,dist,range});
+      tx(a,b,dist,range);tx(b,a,dist,range);
+    }
+  }
+}
+
+function tx(src,tgt,dist,range){
+  let hit=false;
+  src.memes.forEach(id=>{
+    if(!tgt.memes.has(id)&&sel.has(id)){
+      const m=mById[id];if(!m)return;
+      if(Math.random()<(m.v/10)*tgt.sus*(1-dist/range)*.28){
+        tgt.memes.add(id);hit=true;
+        if(src.tt<=0){src.thought=TEMOJI[id]||'💭';src.tt=26;}
+      }
+    }
+  });
+  if(hit)tgt.flash=Math.min(8,tgt.flash+3);
+}
+
+function decay(){
+  agents.forEach(a=>a.memes.forEach(id=>{
+    if(!sel.has(id)){a.memes.delete(id);return;}
+    const m=mById[id];
+    if(m&&Math.random()<(1-m.s/10)*.05)a.memes.delete(id);
+  }));
+}
+
+function mutate(){
+  if(Math.random()<.3&&sel.size){
+    const pool=[...sel];
+    const tgt=agents[Math.floor(Math.random()*agents.length)];
+    const id=pool[Math.floor(Math.random()*pool.length)];
+    if(!tgt.memes.has(id)){tgt.memes.add(id);mutN++;tgt.flash=7;addLog(`Spontaneous: <span>${mById[id]?.name}</span>`,'w');}
+  }
+}
+
+function evalMx(){
+  mplexes=[];
+  MPLEXES.forEach(def=>{
+    if(def.req.filter(id=>sel.has(id)).length<Math.ceil(def.req.length*.7))return;
+    let h=0;
+    agents.forEach(a=>{if(def.req.every(id=>a.memes.has(id)))h++;});
+    const str=h/agents.length;
+    if(str>.01||h>2)mplexes.push({...def,str,h});
+  });
+  mplexes.sort((a,b)=>b.str-a.str);
+  agents.forEach(a=>{
+    const prev=a.mplex;a.mplex=null;
+    for(const d of mplexes)if(d.req.every(id=>a.memes.has(id))){a.mplex=d.id;break;}
+    if(!prev&&a.mplex)a.flash=8;
+  });
+  mplexes.forEach(mp=>{
+    if(mp.str>.3&&mp._l!=='m'){mp._l='m';addLog(`<span>${mp.name}</span> — critical mass`,'c');showToast('CRITICAL MASS — '+mp.name);}
+    if(mp.str>.5&&mp._l!=='d'){mp._l='d';addLog(`<span>${mp.name}</span> — DOMINANCE`,'c');showToast('DOMINANCE — '+mp.name);}
+  });
+}
+
+// ─────────────────────────────────────
+// UI
+// ─────────────────────────────────────
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+function updateStats(){
+  document.getElementById('sA').textContent=agents.length;
+  document.getElementById('sM').textContent=mplexes.length;
+  document.getElementById('sMu').textContent=mutN;
+  const tot=agents.reduce((s,a)=>s+a.memes.size,0);
+  const max=agents.length*Math.max(1,sel.size);
+  document.getElementById('sR').textContent=max>0?Math.round(tot/max*100)+'%':'0%';
+  document.getElementById('sDom').textContent=mplexes[0]?mplexes[0].name:'—';
+  const ml=document.getElementById('mxList');
+  if(!mplexes.length){ml.innerHTML='<div style="color:#4a4a6a;font-size:.64rem;text-align:center;padding:8px 0;line-height:1.9">No memeplexes formed yet.<br><span style="color:#00ffe1">Run the simulation to watch ideas cluster.</span></div>';return;}
+  const maxS=Math.max(...mplexes.map(m=>m.str));
+  ml.innerHTML='';
+  mplexes.forEach((mp,i)=>{
+    const pct=Math.round(mp.str*100),bw=maxS>0?(mp.str/maxS)*100:0;
+    const tags=[...mp.req,...(mp.opt||[])].filter(id=>sel.has(id)&&agents.some(a=>a.memes.has(id))).map(id=>mById[id]?.name||id).slice(0,4);
+    const d=document.createElement('div');
+    d.className='mx-item'+(i===0?' dom':'');
+    d.innerHTML=`<div class="mx-name" style="color:${mp.color}">${i===0?'◆ ':''}${mp.name}</div>`+
+      `<div class="mx-track"><div class="mx-bar" style="width:${bw}%;background:${mp.color}"></div></div>`+
+      `<div class="mx-row"><span>👥 ${mp.h} (${pct}%)</span><span>${i===0?'DOMINANT':'#'+(i+1)}</span></div>`+
+      `<div class="mx-desc">${mp.desc}</div>`+
+      `<div class="mx-tags">${tags.map(n=>`<span class="mx-tag" style="background:${mp.color}22;color:${mp.color}">${n}</span>`).join('')}</div>`;
+    ml.appendChild(d);
+  });
+}
+
+function addLog(msg,type=''){
+  const el=document.createElement('div');el.className='ll '+type;
+  el.innerHTML=`[${String(gen).padStart(5,'0')}] ${msg}`;
+  const b=document.getElementById('logbox');b.insertBefore(el,b.firstChild);
+  logLines.push(el);if(logLines.length>80)logLines.shift().remove();
+}
+
+function toggleSim(){
+  if(!sel.size){showToast('SELECT MEMES FIRST');goTab('pMemes',document.querySelectorAll('.tab')[1]);return;}
+  running=!running;
+  const btn=document.getElementById('btnRun');
+  if(running){
+    if(!agents.length)initAgents();
+    document.getElementById('hint').style.display='none';
+    btn.textContent='⏸ PAUSE';btn.classList.add('on');
+    addLog(`Started — <span>${sel.size} memes</span> seeded`);
+    loop();
+  } else {
+    btn.textContent='▶ RUN';btn.classList.remove('on');
+    cancelAnimationFrame(animId);
+  }
+}
+
+function resetSim(){
+  running=false;cancelAnimationFrame(animId);
+  agents=[];conns=[];gen=0;mutN=0;mplexes=[];
+  MPLEXES.forEach(d=>{d._l=null;});
+  const btn=document.getElementById('btnRun');
+  btn.textContent='▶ RUN';btn.classList.remove('on');
+  document.getElementById('hint').style.display='flex';
+  document.getElementById('genBadge').textContent='GEN 0';
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  updateStats();
+  document.getElementById('logbox').innerHTML='';logLines=[];
+  addLog('Reset — <span>select memes and run</span>');
+}
+
+function loop(){if(!running)return;step();draw();animId=requestAnimationFrame(loop);}
+
+function resizeCvs(){
+  const w=document.getElementById('canvas-wrap');
+  canvas.width=w.clientWidth;canvas.height=w.clientHeight;
+  if(!running&&agents.length)draw();
+}
+window.addEventListener('resize',()=>setTimeout(resizeCvs,60));
+
+// ─────────────────────────────────────
+// ENCYCLOPEDIA
+// ─────────────────────────────────────
+function buildEnc(){
+  const el=document.getElementById('encyclopedia');
+  MPLEXES.forEach(mp=>{
+    const all=[...mp.req,...(mp.opt||[])];
+    const d=document.createElement('div');d.className='acc';
+    d.innerHTML=`<div class="acc-hd" onclick="togAcc(this)">`+
+      `<div style="width:9px;height:9px;border-radius:50%;background:${mp.color};flex-shrink:0"></div>`+
+      `<div class="acc-nm" style="color:${mp.color}">${mp.name}</div>`+
+      `<div class="acc-ar">▼</div></div>`+
+      `<div class="acc-bd">`+
+      `<p>${mp.desc}</p><p><strong>Real-world:</strong> ${mp.world}</p>`+
+      `<p><strong>Core hook:</strong> ${mp.hook}</p>`+
+      `<div class="acc-tags">${all.map(id=>{const m=mById[id],r=mp.req.includes(id);return m?`<span class="acc-tag" style="background:${mp.color}${r?'30':'18'};color:${mp.color};border:1px solid ${mp.color}${r?'55':'22'}">${r?'★ ':''}${m.name}</span>`:''}).join('')}</div>`+
+      `<div class="acc-note">★ = required memes</div></div>`;
+    el.appendChild(d);
+  });
+}
+function togAcc(h){h.nextElementSibling.classList.toggle('open');h.querySelector('.acc-ar').classList.toggle('open');}
+
+// ─────────────────────────────────────
+// TICKER
+// ─────────────────────────────────────
+const FACTS=[
+  'MEMETICS: Self-replicating cultural units — Dawkins, The Selfish Gene (1976)',
+  'MEMEPLEX: Mutually-reinforcing meme clusters that spread as coherent ideational units',
+  'VIRALITY: Fear-based memes spread fastest — amygdala hijack before critical thinking engages',
+  'STICKINESS: Unfalsifiable beliefs score 10/10 — evidence-resistance is the survival mechanism',
+  'CCRU: Hyperstition — fictions that make themselves real through collective belief and action',
+  'BLACKMORE: The self is a memeplex, not a container that memes fill',
+  'SELECTION: Memes compete for cognitive bandwidth — attention is the scarce resource',
+  'MUTATION: Every retelling drifts — heresies are mutations that sometimes outcompete the parent',
+  'DENNETT: Religions are wild memes that evolved to hijack human cognitive architecture',
+  'LAND: Accelerationism — a meme designed to make capitalism eat itself by feeding it speed',
+];
+function buildTicker(){
+  const el=document.getElementById('tickInner');
+  const d=[...FACTS,...FACTS];
+  el.innerHTML=d.map(t=>{const c=t.indexOf(':');return c>-1?`<em>${t.slice(0,c+1)}</em>${t.slice(c+1)}`:t;}).join('&nbsp;&nbsp; /// &nbsp;&nbsp;');
+}
+
+// ─────────────────────────────────────
+// INIT
+// ─────────────────────────────────────
+renderLib();
+buildEnc();
+buildTicker();
+setTimeout(resizeCvs,100);
+addLog('Initialized — <span>select memes to begin</span>');
+addLog('Tip: use presets for instant memeplex formation 🧬');
+['afterlife','us_them','hidden_hand','pattern','hero'].forEach(id=>sel.add(id));
+renderLib();
+</script>
+</body>
+</html>
