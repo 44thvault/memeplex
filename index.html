@@ -330,6 +330,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e8e8e8;f
 <body>
 
 <!-- INTRO MODAL -->
+<script>
+function closeIntro(){
+  document.getElementById('introModal').classList.add('hidden');
+  localStorage.setItem('mplx_v2','1');
+  // canvas resize happens after main script loads
+  setTimeout(function(){
+    if(typeof goTab==='function') goTab('pSim', document.querySelector('.tab'));
+    if(typeof resizeCvs==='function') resizeCvs();
+  }, 100);
+}
+if(localStorage.getItem('mplx_v2')){
+  document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('introModal').classList.add('hidden');
+  });
+}
+</script>
 <div id="introModal">
   <div class="modal-box">
     <div class="modal-hdr">
@@ -1133,13 +1149,6 @@ addLog('Tip: use presets for instant memeplex formation 🧬');
 renderLib();
 
 // ── INTRO MODAL ──
-function closeIntro(){
-  document.getElementById('introModal').classList.add('hidden');
-  localStorage.setItem('mplx_v2','1');
-  // make sure SIM tab is active and canvas sized correctly
-  goTab('pSim', document.querySelector('.tab'));
-  setTimeout(resizeCvs, 80);
-}
 // show on first visit only
 if(localStorage.getItem('mplx_v2')){
   document.getElementById('introModal').classList.add('hidden');
